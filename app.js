@@ -18,3 +18,8 @@ app.use('/users', users);
 app.listen(PORT, () => {
   console.log(`Server listening on port: ${PORT}`);
 });
+
+
+
+// https://www.last.fm/api/intro
+// Use this as the URL to make the calls to the API
