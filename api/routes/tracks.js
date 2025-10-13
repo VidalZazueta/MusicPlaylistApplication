@@ -9,15 +9,14 @@ const API_URL = 'http://ws.audioscrobbler.com/2.0/';
 
 /** 
  @route GET /tracks/search
- @description Search for a track by name using the Last.fm API
+ @desc Search for a track by name using the Last.fm API
  @queryparam {string} name (required) search API for a track by name
  @queryparam {string} fuzzy (optional) fuzzy search using *
-
- @reutrns {Object} JSON response from Last.fm API returning a track with a mbid
+ @returns {Object} JSON response from Last.fm API returning a track with a mbid
 * */
 router.get('/search', async (req, res) => {
 
-    const { track, fuzzy } = req.query;
+    let { track, fuzzy } = req.query;
 
     if(!track) {
         return res.status(400).json({ error: 'Missing query parameter: track' });
@@ -73,6 +72,7 @@ router.get('/search', async (req, res) => {
  * @description Get detailed information about a track usings its mbid
  * @param {string} mbid (required) The MusicBrainz ID of the track
  * @returns {Object} JSON response from Last.fm API returning detailed track information
+ * @test Test with the following url in postman: http://localhost:8888/tracks/b1a9c0e9-d987-4042-ae91-78d6a3267d69
  */
 
 router.get("/:mbid", async (req, res) => {
@@ -93,7 +93,6 @@ router.get("/:mbid", async (req, res) => {
             format: 'json',
         };
 
-
         const { data } = await axios.get(API_URL, { params });
         
         const metadata = data.track;
@@ -103,6 +102,7 @@ router.get("/:mbid", async (req, res) => {
             return res.status(404).json({ error: 'Track not found with given mbid' });
         }
         
+        // Get the following metadata of the track
         const minimal = {
             name: metadata.name,
             artist: metadata.artist,
