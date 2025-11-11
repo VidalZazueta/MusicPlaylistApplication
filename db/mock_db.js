@@ -14,9 +14,8 @@ const User = {
             _id: 1,
             username: 'vidal',
             password: '123',
-            registrationDate: '2024-01-15T10:30:00.000Z'
+            registrationDate: 1762831252212
         },
-        // add at least 1 mock user that matches the outlined requirements
     ],
 
     /**
