@@ -1,6 +1,9 @@
 import 'dotenv/config';
 import mongoose from 'mongoose';
 
+import User from './models/users.js';
+import Playlist from './models/playlists.js';   
+
 const DB_USER = process.env.DB_USER;
 const DB_PASSWORD = process.env.DB_PASSWORD;
 const DB_URL = process.env.DB_URL;
@@ -33,12 +36,61 @@ const runScript = async () => {
     try {
         await connect();
 
-        //TODO: Add your script logic here
+        // Clean the existing data
+        console.log("Cleaning Database data...");
+        await User.deleteMany({});
+        await Playlist.deleteMany({});
+        console.log("Database cleaned.");
 
+        // Insert a new user in the database
+        console.log("Inserting new user...");
+        const newUser = await User.create({
+            username: "vidal",
+            password: "123"
+        });
+        console.log("New user inserted:", newUser);
+
+        // Insert a new playlist for the user just created
+        console.log("Inserting new playlist for the user:", newUser.username);
+
+
+        await Playlist.create({
+            user_id: newUser._id,
+            title: 'Favorites',
+            tracks: [
+                {
+                    name: "Bohemian Rhapsody",
+                    artist: "Queen",
+                    album: "Greatest Hits",
+                    mbid: "b1c4b5e5-6e5e-4e5e-8e5e-b1a9c0e9-d987-4042-ae91-78d6a3267d69",
+                    image: "https://lastfm.freetls.fastly.net/i/u/34s/1aec5cac8403fbda275b8200b77c8318.png"
+                },
+                {
+                    mbid: 'Lang Lang|Empire State Of Mind',
+                    name: 'Empire State Of Mind',
+                    artist: 'Lang Lang',
+                    album: 'Empire State Of Mind',
+                    image: ''
+                }
+
+            ]
+
+
+        });
+
+        const userWithPlaylists = await User.findById(newUser._id).populate('playlists').select('-password');
+
+        // Print the query to console
+        console.log("Queried User with Playlists:", JSON.stringify(userWithPlaylists, null, 2));
 
     } catch (error) {
         console.error("Error running script:", error);
         process.exit(1);
+        
+    } finally {
+        // Close the mongoose connection
+        await mongoose.connection.close();
+        console.log("MongoDB connection closed.");
     }
 
 

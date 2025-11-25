@@ -1,13 +1,15 @@
 import mongoose from 'mongoose';
 
 /**
- * Playlist sub-document schema
- * Represents a playlist within a user's collection
- * 
+ * track subdocument schema
+ * represents a single track entry inside a playlist
  */
-
 const TrackSchema = new mongoose.Schema({
-    track: {
+    mbid: {
+        type: String,
+        required: true
+    },
+    name: {
         type: String,
         required: true
     },
@@ -19,46 +21,30 @@ const TrackSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    mbid: {
-        type: String,
-        required: true,
-        unique: false,
-    },
-    image : {
-        type: String,
-        required: false,
+    image: {
+        type: String
     }
-
 });
 
 /**
- *  Playlist Schema
- * Represents a user's playlist containing multiple tracks
+ * playlist schema
+ * represents a music playlist containing multiple tracks
  */
-const PlaylistSchema = new mongoose.Schema(
-    {
-        title: {
-            type: String,
-            lowercase: true,
-            required: true,
-            trim: true,
-        },
-        
-        user_id: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'User',
-        },
-
-        tracks: {
-            type: [TrackSchema],
-            default: []
-        }
+const PlaylistSchema = new mongoose.Schema({
+    user_id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
     },
-    {
-        timestamps: true,
+    title: {
+        type: String,
+        required: [true, 'title is required']
+    },
+    tracks: {
+        type: [TrackSchema],
+        default: []
     }
-);
+});
 
 const Playlist = mongoose.model('Playlist', PlaylistSchema);
-export default Playlist;
 
+export default Playlist;
