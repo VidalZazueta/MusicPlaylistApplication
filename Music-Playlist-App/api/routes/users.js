@@ -1,6 +1,9 @@
 import express from 'express';
 
-import { User } from '../../db/mock_db.js';
+import { hash, compare, signToken} from '../util/auth.js'
+import { verifyUser } from '../middleware/authorization.js';
+
+import User from '../models/users.js'
 
 const router = express.Router();
 
@@ -10,6 +13,7 @@ const router = express.Router();
  * @returns {object} the user object without the password
  */
 const _sanitize = (user) => {
+    const userObj = user.toObject ? user.toObject(): user;
     const { password, ...rest } = user;
     return rest;
 };
@@ -20,8 +24,9 @@ const _sanitize = (user) => {
  * @param {Object} req.body - the request body
  *
  * @returns {Object} 201 - user object (sanitized)
+ * @returns {Object} 400 - eror if username or password missing
  */
-router.post('/register', (req, res) => {
+router.post('/register', async (req, res) => {
     try {
         const { username, password } = req.body;
 
@@ -29,17 +34,20 @@ router.post('/register', (req, res) => {
             return res.status(400).json({ error: 'Username and password are required.' });
         }
 
-        const existing = User.find('username', username);
+        const existing = await User.findOne({ username: username.toLowerCase() });
         if (existing) {
-            return res.status(409).json({ error: 'Username already exists.' });
+            return res.status(400).json({ error: 'Username already exists.' });
         }
 
-        const user = {
-            username,
-            password,
-            registrationDate: Date.now()
-        };
-        const addedUser = User.add(user);
+        // Hash the password
+        const hashedPassword = await hash(password);
+
+        // Save the hashed password to the database
+        const registeredUser = await User.create({
+            username: username.toLowerCase(),
+            password: hashedPassword,
+            registrationDate: Date.now(),
+        });
 
         res.status(201).json(_sanitize(addedUser));
     } catch (error) {
@@ -55,17 +63,25 @@ router.post('/register', (req, res) => {
  *
  * @returns {Object} 200 - user object (sanitized)
  */
-router.post('/login', (req, res) => {
+router.post('/login', async (req, res) => {
     try {
         const { username, password } = req.body;
 
-        const user = User.find('username', username);
+        const user = await User.findOne({ username: username.toLowerCase() });
+        const validPassword = user && (await compare(password, user.password));
 
-        if (!user || user.password !== password) {
+        // Check if the password is valid after comparing it 
+        if (!validPassword) {
             return res.status(401).json({ error: 'Invalid username or password.' });
         }
 
-        res.json(_sanitize(user));
+        const token = signToken({ username: user.username, _id: user._id });
+        res.json({
+            access_token: token,
+            token_type: 'Bearer',
+            user: _sanitize(user)
+        });
+    
     } catch (error) {
         console.log(error);
         res.status(500).json({ error: 'Failed to login user' });
@@ -80,7 +96,7 @@ router.post('/login', (req, res) => {
  *
  * @returns {Object} 200 - user object (sanitized)
  */
-router.get('/:id', (req, res) => {
+router.get('/:id', verifyUser, async (req, res) => {
     try {
         const { id } = req.params;
         const userId = req.headers.authorization;
@@ -89,16 +105,19 @@ router.get('/:id', (req, res) => {
             return res.status(401).json({ error: 'Authorization header not present.' });
         }
 
-        if (id !== userId) {
+        if (req.user._id.toString() !== id) {
             return res.status(403).json({ error: 'Forbidden. You are not authorized to view this user.' });
         }
 
-        const user = User.find('_id', parseInt(id));
-        if (!user) {
+        const populatedUser = await User.findById(id).populate({
+            path: 'Playlist', //The field we expect to populate that is on the user model
+
+        })
+        if (!populatedUser) {
             return res.status(404).json({ error: 'User not found.' });
         }
 
-        res.json(_sanitize(user));
+        res.json(_sanitize(populatedUser));
     } catch (error) {
         console.log(error);
         res.status(500).json({ error: 'Failed to get user' });
