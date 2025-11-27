@@ -29,7 +29,6 @@ const hash = async (password) => {
 
 }
 
-
 /**
  * Compares a plain-text password against a bcrypt hash.
  * Bcrypt automatically extracts the embedded salt from the hash string for comparison.

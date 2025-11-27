@@ -4,18 +4,49 @@ import 'dotenv/config';
 import playlists from './api/routes/playlists.js';
 import tracks from './api/routes/tracks.js';
 import users from './api/routes/users.js';
+import { connect } from 'mongoose';
 
 const PORT = 8888;
 
 const app = express();
 
+// Parse incoming json requests
 app.use(express.json());
 
+// Route handlers
 app.use('/playlists', playlists);
 app.use('/tracks', tracks);
 app.use('/users', users);
 
-app.listen(PORT, () => {
-  console.log(`Server listening on port: ${PORT}`);
-});
 
+const start = async () => {
+  try {
+    await connect();
+
+    app.listen(PORT, () => {
+      console.log(`Server listening on port: ${PORT}`);
+    });
+
+
+  } catch(error) {
+    // Log error and exit if the server fails to start
+    console.error('Failed to start server:', error.message)
+    process.exit(1);
+  }
+
+};
+
+const shutdown = async () => {
+  console.log('\nShutting down...');
+  await disconnect();
+  process.exit(0);
+
+};
+
+// Listen for the SIGTERM signal - common sources of sigterm include docker stopping a container
+process.on('SIGTERM', shutdown);
+
+// Listen for SIGINT signal (sent when user presses Ctrl+C in the terminal)
+process.on('SIGINT', shutdown);
+
+start();
