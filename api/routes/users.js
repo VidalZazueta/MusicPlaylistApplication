@@ -14,7 +14,7 @@ const router = express.Router();
  */
 const _sanitize = (user) => {
     const userObj = user.toObject ? user.toObject(): user;
-    const { password, ...rest } = user;
+    const { password, ...rest } = userObj;
     return rest;
 };
 
@@ -49,7 +49,7 @@ router.post('/register', async (req, res) => {
             registrationDate: Date.now(),
         });
 
-        res.status(201).json(_sanitize(addedUser));
+        res.status(201).json(_sanitize(registeredUser));
     } catch (error) {
         console.log(error);
         res.status(500).json({ error: 'Failed to register user' });
