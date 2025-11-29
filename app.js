@@ -4,7 +4,7 @@ import 'dotenv/config';
 import playlists from './api/routes/playlists.js';
 import tracks from './api/routes/tracks.js';
 import users from './api/routes/users.js';
-import { connect } from 'mongoose';
+import {connect, disconnect} from './db/connections.js'
 
 const PORT = 8888;
 
@@ -50,3 +50,14 @@ process.on('SIGTERM', shutdown);
 process.on('SIGINT', shutdown);
 
 start();
+
+//TODO Need to update the playlists and tracks routes to use the models schema and connect to mongodb
+
+//Completed 1. Password Hashing with bcrypt, hashing password before storing, and comparing password when logging in
+//Completed 2. JWT for Login, create a JWT that includes user id, and send it back to the client
+//Completed 3. Middleware for Protected routes, client send JWT in the authorization header as a bearer token,
+//Completed - created a middleware function to check and verify JWT
+
+//Completed - User route with MongoDB connection
+//TODO - Update playlist route
+//TODO - update tracks route
