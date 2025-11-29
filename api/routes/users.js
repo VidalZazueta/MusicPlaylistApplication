@@ -99,28 +99,16 @@ router.post('/login', async (req, res) => {
 router.get('/:id', verifyUser, async (req, res) => {
     try {
         const { id } = req.params;
-        const userId = req.headers.authorization;
-
-        if (!userId) {
-            return res.status(401).json({ error: 'Authorization header not present.' });
-        }
 
         if (req.user._id.toString() !== id) {
             return res.status(403).json({ error: 'Forbidden. You are not authorized to view this user.' });
         }
 
-        const populatedUser = await User.findById(id).populate({
-            path: 'Playlist', //The field we expect to populate that is on the user model
 
-        })
-        if (!populatedUser) {
-            return res.status(404).json({ error: 'User not found.' });
-        }
-
-        res.json(_sanitize(populatedUser));
+        return res.json(_sanitize(req.user));
     } catch (error) {
         console.log(error);
-        res.status(500).json({ error: 'Failed to get user' });
+        res.status(500).json({ error: 'Failed to get user by id' });
     }
 });
 
