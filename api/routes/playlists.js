@@ -25,7 +25,7 @@ router.post('/', async(req, res) => {
 
         const newPlaylist = await Playlist.create({
             title: title.toLowerCase(),
-            user: req.user._id
+            user_id: req.user._id
         });
 
         res.status(201).json(newPlaylist);
@@ -49,8 +49,8 @@ router.get('/', async (req, res) => {
         // User should be verified so no need to validate
         const userId = req.user._id;
 
-        const playlists = await Playlist.find({ user: userId});
-        res.status(200).json(populated);
+        const playlists = await Playlist.find({ user_id: userId});
+        res.status(200).json(playlists);
     } catch (error) {
         console.log(error);
         res.status(500).json({ error: 'Failed to get playlist' });
@@ -71,8 +71,7 @@ router.put('/:id', async (req, res) => {
         const { id } = req.params;
         const track = req.body;
 
-
-        const required = ['track','mbid'];
+        const required = ['name', 'mbid'];
         const missingFields = required.filter(field => !track[field]);
 
         if (missingFields.length > 0) {
@@ -86,19 +85,17 @@ router.put('/:id', async (req, res) => {
             return res.status(404).json({ error: 'Playlist not found.' });
         }
 
-        // Check if playlist belongs to the user
-        if (playlist.user.toString() !== req.user._id.toString()) {
-            return res.status(403).json({ error: 'You do not have permission to modify this playlist as you do not own it.' });
+        //Check if playlist belongs to user
+        if (playlist.user_id.toString() !== req.user._id.toString()) {
+            return res.status(403).json({ error: 'You do not have permission to modify this playlist.' });
         }
 
-        //Add track
+        // Add track
         playlist.tracks.push(track);
         await playlist.save();
 
-
         res.json(playlist);
-    } catch (error) {
-        console.log(error);
+    } catch (err) {
         res.status(500).json({ error: 'Failed to update playlist' });
     }
 });
@@ -115,12 +112,12 @@ router.delete('/:id', async (req, res) => {
     try {
         const { id } = req.params;
 
-        const playlist = Playlist.findById(id);
+        const playlist = await Playlist.findById(id);
         if (!playlist) {
             return res.status(404).json({ error: 'Playlist not found.' });
         }
 
-        if(playlist.user.toString() !== req.user._id.toString()) {
+        if (playlist.user_id.toString() !== req.user._id.toString()) {
             return res.status(403).json({ error: 'Forbidden: You do not own this playlist.' });
         }
 
@@ -131,9 +128,7 @@ router.delete('/:id', async (req, res) => {
             playlist
         });
 
-
-    } catch (error) {
-        console.log(error);
+    } catch (err) {
         res.status(500).json({ error: 'Failed to delete playlist' });
     }
 });
