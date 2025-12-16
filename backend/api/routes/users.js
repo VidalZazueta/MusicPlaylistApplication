@@ -99,13 +99,26 @@ router.post('/login', async (req, res) => {
 router.get('/:id', verifyUser, async (req, res) => {
     try {
         const { id } = req.params;
+        const { playlists } = req.query;
 
+        //Only the use can access their profile
         if (req.user._id.toString() !== id) {
             return res.status(403).json({ error: 'Forbidden. You are not authorized to view this user.' });
         }
 
+        if (playlists !== 'true') {
+            return res.json(_sanitize(req.user));
+        }
 
-        return res.json(_sanitize(req.user));
+        // Populate playlists if request
+        const userWithPlaylists = await User.findById(id).populate('playlists');
+
+        if(!userWithPlaylists) {
+            return res.status(404).json({ error: "User not found "});
+        }
+
+        return res.json(_sanitize(userWithPlaylists));
+        
     } catch (error) {
         console.log(error);
         res.status(500).json({ error: 'Failed to get user by id' });
