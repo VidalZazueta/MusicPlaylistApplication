@@ -5,10 +5,17 @@ import playlists from './api/routes/playlists.js';
 import tracks from './api/routes/tracks.js';
 import users from './api/routes/users.js';
 import {connect, disconnect} from './db/connections.js'
+import cors from 'cors';
 
 const PORT = 8888;
 
 const app = express();
+
+
+app.use(cors({
+  origin: 'http://localhost:5173', // Vite default
+  credentials: true
+}));
 
 // Parse incoming json requests
 app.use(express.json());
