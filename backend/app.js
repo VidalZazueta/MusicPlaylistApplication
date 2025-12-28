@@ -12,10 +12,13 @@ const PORT = 8888;
 const app = express();
 
 
-app.use(cors({
-  origin: 'http://localhost:5173', // Vite default
-  credentials: true
-}));
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
 
 // Parse incoming json requests
 app.use(express.json());
