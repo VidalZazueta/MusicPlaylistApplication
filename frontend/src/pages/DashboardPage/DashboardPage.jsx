@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { getPlaylists } from "../../services/playlistService";
 
 const API_BASE = "http://localhost:8888";
 
@@ -9,15 +10,9 @@ function DashboardPage() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchPlaylists = async () => {
+    const loadPlaylists = async () => {
       try {
-        const response = await fetch(`${API_BASE}/playlists`);
-
-        if (!response.ok) {
-          throw new Error(`Request failed: ${response.status}`);
-        }
-
-        const data = await response.json();
+        const data = await getPlaylists();
         setPlaylists(data);
       } catch (err) {
         setError(err.message);
@@ -26,7 +21,7 @@ function DashboardPage() {
       }
     };
 
-    fetchPlaylists();
+    loadPlaylists();
   }, []);
 
   if (loading) {
@@ -51,12 +46,11 @@ function DashboardPage() {
         <p>No playlist found</p>
       ) : (
         <ul>
-          {playlists.map((p) => (
-            <li key = {p._id}>{p.title}</li>
+          {playlists.map((playlist) => (
+            <li key = {playlist._id}>{playlist.title}</li>
           ))}
         </ul>
       )}
-
     </div>
   );
 }
