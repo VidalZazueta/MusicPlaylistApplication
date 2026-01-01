@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { getPlaylists } from "../../services/playlistService";
+import PlaylistList from "../../components/PlaylistCard/PlaylistCard";
 
 const API_BASE = "http://localhost:8888";
 
@@ -42,15 +43,7 @@ function DashboardPage() {
           </nav>
       </header>
 
-      {playlists.length === 0 ?(
-        <p>No playlist found</p>
-      ) : (
-        <ul>
-          {playlists.map((playlist) => (
-            <li key = {playlist._id}>{playlist.title}</li>
-          ))}
-        </ul>
-      )}
+      <PlaylistList playlists={playlists}/>
     </div>
   );
 }
