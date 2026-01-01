@@ -2,6 +2,12 @@
 Services so the pages in the front end dont know the URLs or HTTP details
 We create our function to get the data, so when the pages request the data,
 they only send a request to get the data and don't know the process
+
+Current Architecture
+**Layer** **Responsibility**
+Page : State + rendering
+Service: HTTP + backend
+Backend: Data + rules
 */
 
 // URL parameter to insert in other services
