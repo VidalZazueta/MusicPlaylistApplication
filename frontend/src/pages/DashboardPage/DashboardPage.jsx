@@ -1,13 +1,16 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { getPlaylists } from "../../services/playlistService";
-import PlaylistList from "../../components/PlaylistCard/PlaylistCard";
+import PlaylistList from "../../components/PlaylistList/PlaylistList";
+import SearchBar from "../../components/SearchBar/SearchBar";
+
 
 const API_BASE = "http://localhost:8888";
 
 function DashboardPage() {
   const [playlists, setPlaylists] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("");
   const [error, setError] = useState(null);
 
   useEffect(() => {
@@ -33,6 +36,11 @@ function DashboardPage() {
     return <h2>Error: {error}</h2>;
   }
 
+  // filter the playlists based on the search bar input
+  const filteredPlaylists = playlists.filter((playlist) =>
+  playlist.title.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <div style={{ padding: "1rem" }}>
       <header style={{ marginBottom: "1rem"}}>
@@ -43,7 +51,9 @@ function DashboardPage() {
           </nav>
       </header>
 
-      <PlaylistList playlists={playlists}/>
+      <SearchBar value={searchTerm} onChange={setSearchTerm} />
+
+      <PlaylistList playlists={filteredPlaylists}/>
     </div>
   );
 }

@@ -1,13 +1,26 @@
+import PlaylistCard from "../PlaylistCard/PlaylistCard";
+
 /**
- * @description Render one playlist with no data fetching
- * @returns A list item - playlist
+ * @description Display the playlist in a UI card, Handles no business logic as it accepts data via props
+ * @params {playlists} - Playlist data passed as a prop
+ * @returns Unordered bullet list of a playlist
  */
-function PlaylistCard ({ playlist }) {
+function PlaylistList({ playlists}) {
+
+    if(!playlists || playlists.length === 0) {
+        return <p>No playlists found</p>
+    }
+
     return (
-        <li>
-            {playlist.title}
-        </li>
-    )
+        <ul>
+            {playlists.map((playlist) => (
+                <PlaylistCard
+                    key={playlist._id}
+                    playlist={playlist}
+                />
+            ))}
+        </ul>
+    );
 }
 
-export default PlaylistCard;
+export default PlaylistList;
