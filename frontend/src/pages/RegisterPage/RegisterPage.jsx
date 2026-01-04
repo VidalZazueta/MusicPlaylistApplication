@@ -1,13 +1,19 @@
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import AuthForm from "../../components/AuthForm/AuthForm";
 
 function RegisterPage() {
+
+  const navigate = useNavigate();
+
+  const handleRegister = (formData) => {
+    console.log("Register submitted:", formData);
+
+    navigate("/login");
+  };
+
   return (
     <div style={{ padding: "1rem" }}>
-      <h1>Register</h1>
-      <p>This page will use the shared AuthForm later.</p>
-      <p>
-        Already have an account? <Link to="/login">Login</Link>
-      </p>
+      <AuthForm mode="register" onSubmit={handleRegister}/>
     </div>
   );
 }
