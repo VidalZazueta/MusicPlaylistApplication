@@ -6,72 +6,83 @@ import { useState } from "react";
  * @param {Function} onSubmit - callback with form data
  */
 function AuthForm({ mode = "login", onSubmit }) {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [error, setError] = useState(null);
 
-  const isRegister = mode === "register";
+    //Controlled states
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
+    const [error, setError] = useState(null);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setError(null);
+    //Determine if we are in login or register UI
+    const isRegister = mode === "register";
 
-    if (!username || !password) {
-      setError("All fields are required.");
-      return;
-    }
+    //Handle form submission
+    const handleSubmit = (e) => {
+        //Prevent browers reload
+        e.preventDefault();
+        setError(null);
 
-    if (isRegister && password !== confirmPassword) {
-      setError("Passwords do not match.");
-      return;
-    }
+        //* Required fields
+        if (!username || !password) {
+        setError("All fields are required.");
+        return;
+        }
 
-    onSubmit({
-      username,
-      password
-    });
-  };
+        //Validate the registration details
+        if (isRegister && password !== confirmPassword) {
+        setError("Passwords do not match.");
+        return;
+        }
 
-  return (
-    <form onSubmit={handleSubmit} style={{ maxWidth: "400px" }}>
-      <h2>{isRegister ? "Register" : "Login"}</h2>
+        //Emit data upward
+        onSubmit({
+        username,
+        password
+        });
+    };
 
-      {error && <p style={{ color: "red" }}>{error}</p>}
+    return (
+        <form onSubmit={handleSubmit} style={{ maxWidth: "400px" }}>
 
-      <div>
-        <label>Username</label>
-        <input
-          type="text"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-        />
-      </div>
+        {/* Dynamic title based on mode */}
+        <h2>{isRegister ? "Register" : "Login"}</h2>
 
-      <div>
-        <label>Password</label>
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-      </div>
+        {error && <p style={{ color: "red" }}>{error}</p>}
 
-      {isRegister && (
         <div>
-          <label>Confirm Password</label>
-          <input
-            type="password"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-          />
+            <label>Username</label>
+            <input
+            type="text"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            />
         </div>
-      )}
 
-      <button type="submit">
-        {isRegister ? "Create Account" : "Login"}
-      </button>
-    </form>
+        <div>
+            <label>Password</label>
+            <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            />
+        </div>
+
+        {/* Confirm password (register only) */}
+        {isRegister && (
+            <div>
+            <label>Confirm Password</label>
+            <input
+                type="password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+            />
+            </div>
+        )}
+
+        <button type="submit">
+            {isRegister ? "Create Account" : "Login"}
+        </button>
+        </form>
   );
 }
 
