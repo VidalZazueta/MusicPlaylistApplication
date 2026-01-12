@@ -13,16 +13,33 @@ Backend: Data + rules
 // URL parameter to insert in other services
 const API_BASE = 'http://localhost:8888';
 
+// Get the token stored locally
+function getToken() {
+    return localStorage.getItem("token");
+}
+
 /**
  * Return the playlist data in a JSON format
  */
 export async function getPlaylists() {
+    const token = getToken();
 
-    const response = await fetch(`${API_BASE}/playlists`);
+    if(!token) {
+        throw new Error("Not logged in. Please log in");
+    }
+
+    const response = await fetch(`${API_BASE}/playlists`, {
+        method: "GET",
+        headers: {
+            "Content-Type" : "application/json",
+            Authorization: `Bearer ${token}` // JWT
+        }
+    });
 
     // Check if response is successful
     if(!response.ok) {
-        throw new Error(`Failed to fetch playlists: ${response.status}`);
+        const error = await response.json().catch(() => ({}));
+        throw new Error(error.error || `Failed to fetch playlists: ${response.status}`);
     }
 
     return response.json();

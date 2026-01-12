@@ -4,6 +4,9 @@ import { verifyUser } from '../middleware/authorization.js';
 
 const router = express.Router();
 
+// Protected the route with the middleware by verifying the user
+router.use(verifyUser)
+
 
 /**
  * @route   POST /playlist
@@ -43,16 +46,18 @@ router.post('/', async(req, res) => {
  */
 router.get('/', async (req, res) => {
     try {
-        const playlists = await Playlist.find();
+
+        // Verify user
+        const userId = req.user._id;
+
+        const playlists = await Playlist.find({ user_id: userId});
+
         res.status(200).json(playlists);
     } catch (error) {
         console.log(error);
         res.status(500).json({ error: 'Failed to get playlists' });
     }
 });
-
-// Protected the route with the middleware by verifying the user
-router.use(verifyUser)
 
 /**
  * @route   PUT /playlist/:id
