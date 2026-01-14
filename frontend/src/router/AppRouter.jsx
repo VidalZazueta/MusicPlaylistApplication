@@ -32,6 +32,7 @@ Example: <Route
 import LoginPage from "../pages/LoginPage/LoginPage";
 import RegisterPage from "../pages/RegisterPage/RegisterPage";
 import DashboardPage from "../pages/DashboardPage/DashboardPage";
+import ProtectedRoute from "./ProtectedRoute";
 
 
 function AppRouter() {
@@ -49,7 +50,14 @@ function AppRouter() {
                 <Route path="/register" element={<RegisterPage/>}/>
 
                 {/* App Routes */}
-                <Route path="/dashboard" element={<DashboardPage/>}/>
+                <Route path="/dashboard" 
+                    element={
+                        <ProtectedRoute>
+                            <DashboardPage/>
+                        </ProtectedRoute>
+                    }
+                
+                />
 
                 {/* Catch-All */}
                 <Route path="*" element={<h2>404 - Page not found</h2>}/>
