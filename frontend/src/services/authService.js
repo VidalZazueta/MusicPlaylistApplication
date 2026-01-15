@@ -48,3 +48,9 @@ export async function register(credentials) {
     return response.json();
 }
 
+/**
+ * @description Remove the JWT token from local storage to effectively logout the user
+ */
+export function logout() {
+    localStorage.removeItem("token");
+}
