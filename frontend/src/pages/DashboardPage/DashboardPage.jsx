@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { getPlaylists } from "../../services/playlistService";
+import { logout } from "../../services/authService";
 import PlaylistList from "../../components/PlaylistList/PlaylistList";
 import SearchBar from "../../components/SearchBar/SearchBar";
+
 
 
 const API_BASE = "http://localhost:8888";
@@ -12,6 +14,15 @@ function DashboardPage() {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [error, setError] = useState(null);
+
+  const navigate = useNavigate();
+
+  // Handle the user logging out
+  const handleLogout = () => {
+    //Calls the imported void function from authService
+    logout();
+    navigate("/login");
+  }
 
   useEffect(() => {
     const loadPlaylists = async () => {
@@ -45,9 +56,9 @@ function DashboardPage() {
     <div style={{ padding: "1rem" }}>
       <header style={{ marginBottom: "1rem"}}>
         <h1>DashBoard</h1>
+
           <nav style={{ display: "flex", gap: "1rem "}}>
-            <Link to="/login">Login</Link>
-            <Link to="/register">Register</Link> 
+            <button onClick={handleLogout}>Logout</button>
           </nav>
       </header>
 
