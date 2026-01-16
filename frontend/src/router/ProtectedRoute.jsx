@@ -1,4 +1,5 @@
 import { Navigate } from "react-router-dom";
+import { isTokenExpired } from "../util/auth";
 
 /**
  * @description Protect routes that need authentication. Redirects to login page if no JWT is present
@@ -9,8 +10,9 @@ function ProtectedRoute({ children })  {
 
     const token = localStorage.getItem("token");
 
-    if(!token) {
-        return <Navigate to="/login" replace />
+    if(!token || isTokenExpired(token)) {
+        localStorage.removeItem("token");
+        return <Navigate to="/login" replace/>
     }
 
     return children;

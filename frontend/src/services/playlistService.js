@@ -18,6 +18,10 @@ function getToken() {
     return localStorage.getItem("token");
 }
 
+function removeToken() {
+    localStorage.removeItem("token");
+}
+
 /**
  * Return the playlist data in a JSON format
  */
@@ -29,17 +33,19 @@ export async function getPlaylists() {
     }
 
     const response = await fetch(`${API_BASE}/playlists`, {
-        method: "GET",
         headers: {
-            "Content-Type" : "application/json",
             Authorization: `Bearer ${token}` // JWT
         }
     });
 
+    if(response.status === 401) {
+        removeToken();
+        throw new Error("Session expired. Please log in again")
+    }
+
     // Check if response is successful
     if(!response.ok) {
-        const error = await response.json().catch(() => ({}));
-        throw new Error(error.error || `Failed to fetch playlists: ${response.status}`);
+        throw new Error(`Failed to fetch playlists: ${response.status}`);
     }
 
     return response.json();
