@@ -3,7 +3,7 @@ import { isTokenExpired } from "../util/auth";
 
 /**
  * @description Protect routes that need authentication. Redirects to login page if no JWT is present
- * @param {children} - The item inside the components closing tag, in this case a route that we want to protect
+ * @param {Object} children - The item inside the components closing tag, in this case a route that we want to protect
  */
 
 function ProtectedRoute({ children })  {

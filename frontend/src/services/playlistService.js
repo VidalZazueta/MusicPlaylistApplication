@@ -51,3 +51,37 @@ export async function getPlaylists() {
     return response.json();
 
 }
+
+/**
+ * @description Create a playlist with a specified title
+ * @param {String} title - The name of the title for the playlist
+ * @returns 
+ */
+export async function createPlaylist(title) {
+  const token = localStorage.getItem("token");
+
+  if (!token) {
+    throw new Error("Not authenticated");
+  }
+
+  const response = await fetch("http://localhost:8888/playlists", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`
+    },
+    body: JSON.stringify({ title })
+  });
+
+  if (response.status === 401) {
+    localStorage.removeItem("token");
+    throw new Error("Session expired. Please log in again.");
+  }
+
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.error || "Failed to create playlist");
+  }
+
+  return response.json();
+}

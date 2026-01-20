@@ -4,6 +4,8 @@ import { getPlaylists } from "../../services/playlistService";
 import { logout } from "../../services/authService";
 import PlaylistList from "../../components/PlaylistList/PlaylistList";
 import SearchBar from "../../components/SearchBar/SearchBar";
+import { createPlaylist } from "../../services/playlistService";
+import CreatePlaylistForm from "../../components/CreatePlaylistForm/CreatePlaylistForm";
 
 
 
@@ -23,6 +25,17 @@ function DashboardPage() {
     logout();
     navigate("/login");
   }
+
+  const handleCreatePlaylist = async (title) => {
+    try {
+      const newPlaylist = await createPlaylist(title);
+
+      // Optimistic update (instant UI update)
+      setPlaylists((prev) => [...prev, newPlaylist]);
+    } catch (err) {
+      setError(err.message);
+    }
+  };
 
   useEffect(() => {
     const loadPlaylists = async () => {
@@ -61,6 +74,8 @@ function DashboardPage() {
             <button onClick={handleLogout}>Logout</button>
           </nav>
       </header>
+
+      <CreatePlaylistForm onCreate={handleCreatePlaylist}/>
 
       <SearchBar value={searchTerm} onChange={setSearchTerm} />
 
