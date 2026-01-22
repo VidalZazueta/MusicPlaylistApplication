@@ -26,14 +26,22 @@ function DashboardPage() {
     navigate("/login");
   }
 
+  /**
+   * @description Handles the creation of a playlist on the frontend, updates UI after doing so
+   * @param {*} title - Title of the playlist
+   */
   const handleCreatePlaylist = async (title) => {
     try {
+
+      //Clear previous errors
+      setError(null);
+
       const newPlaylist = await createPlaylist(title);
 
-      // Optimistic update (instant UI update)
+      // Update UI immediately
       setPlaylists((prev) => [...prev, newPlaylist]);
     } catch (err) {
-      setError(err.message);
+      setError(err.message || "Failed to create playlist");
     }
   };
 
@@ -74,6 +82,9 @@ function DashboardPage() {
             <button onClick={handleLogout}>Logout</button>
           </nav>
       </header>
+
+      
+      {error && (<div style={{ color: "red", marginBottom: "1rem" }}>{error}</div>)}
 
       <CreatePlaylistForm onCreate={handleCreatePlaylist}/>
 

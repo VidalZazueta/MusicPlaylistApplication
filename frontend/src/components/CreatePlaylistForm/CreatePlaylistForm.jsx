@@ -8,8 +8,9 @@ import { useState } from "react";
 function CreatePlaylistForm({ onCreate }) {
   const [title, setTitle] = useState("");
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
 
@@ -18,8 +19,15 @@ function CreatePlaylistForm({ onCreate }) {
       return;
     }
 
-    onCreate(title);
-    setTitle("");
+    try {
+      setLoading(true);
+      await onCreate(title);
+      setTitle("");
+    } catch (error) { // Catch for debugging purposes
+      console.log(error)
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -31,9 +39,12 @@ function CreatePlaylistForm({ onCreate }) {
         placeholder="New playlist title"
         value={title}
         onChange={(e) => setTitle(e.target.value)}
+        disabled={loading}
       />
 
-      <button type="submit">Create Playlist</button>
+      <button type="submit" disabled={loading}>
+        {loading ? "Creating..." : "Create Playlist"}
+      </button>
     </form>
   );
 }
