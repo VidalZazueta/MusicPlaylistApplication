@@ -4,7 +4,7 @@ import { getPlaylists } from "../../services/playlistService";
 import { logout } from "../../services/authService";
 import PlaylistList from "../../components/PlaylistList/PlaylistList";
 import SearchBar from "../../components/SearchBar/SearchBar";
-import { createPlaylist } from "../../services/playlistService";
+import { createPlaylist, deletePlaylist } from "../../services/playlistService";
 import CreatePlaylistForm from "../../components/CreatePlaylistForm/CreatePlaylistForm";
 
 
@@ -42,6 +42,33 @@ function DashboardPage() {
       setPlaylists((prev) => [...prev, newPlaylist]);
     } catch (err) {
       setError(err.message || "Failed to create playlist");
+    }
+  };
+
+  /**
+   * @description - handles deleting the playlist in the frontend
+   * @param {*} playlistId - The ID of the playlist
+   * 
+   */
+  const handleDeletePlaylist = async (playlistId) => {
+    //User confirmation to delete
+    const confirmed = window.confirm("Are you sure you want to delete this playlist?");
+
+    if(!confirmed) {
+      return;
+    }
+
+    try {
+      setError(null);
+
+      await deletePlaylist(playlistId);
+
+      setPlaylists((prev) =>
+        prev.filter((playlist) => playlist._id !== playlistId)
+      );
+
+    } catch(error) {
+      setError(error.message);
     }
   };
 
@@ -90,7 +117,7 @@ function DashboardPage() {
 
       <SearchBar value={searchTerm} onChange={setSearchTerm} />
 
-      <PlaylistList playlists={filteredPlaylists}/>
+      <PlaylistList playlists={filteredPlaylists} onDelete={handleDeletePlaylist}/>
     </div>
   );
 }

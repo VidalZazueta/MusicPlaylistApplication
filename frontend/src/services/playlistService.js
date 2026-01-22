@@ -85,3 +85,39 @@ export async function createPlaylist(title) {
 
   return response.json();
 }
+
+/**
+ * @description - Deletes a playlist
+ * @param {*} playlistId - the specific ID of the playlist
+ * @returns {Object} json response 
+ */
+export async function deletePlaylist(playlistId) {
+  const token = getToken();
+
+  if(!token) {
+    throw new Error("Not Authenticated");
+  }
+
+  const response = await fetch ( 
+    `http://localhost:8888/playlists/${playlistId}` ,
+    {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    }
+  );
+
+  if(response.status === 401) {
+    removeToken();
+    throw new Error("Session expired. Please log in again");
+  }
+
+  if(!response.ok) {
+    const error = await response.json();
+    throw new Error(error.error || "Failed to delete playlist");
+  }
+
+  return response.json();
+
+}
