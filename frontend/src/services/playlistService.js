@@ -121,3 +121,31 @@ export async function deletePlaylist(playlistId) {
   return response.json();
 
 }
+
+export async function getPlaylistById(id) {
+  const token = getToken();
+
+  if(!token) {
+    throw new Error("Not authenticated");
+  }
+
+  const response = await fetch(
+    `http://localhost:8888/playlists/${id}`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    }
+  );
+
+  if(response.status === 401) {
+    removeToken();
+    throw new Error("Session expired");
+  }
+
+  if(!response.ok) {
+    throw new Error("Playlist not found");
+  }
+
+  return response.json();
+}
