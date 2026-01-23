@@ -32,6 +32,7 @@ Example: <Route
 import LoginPage from "../pages/LoginPage/LoginPage";
 import RegisterPage from "../pages/RegisterPage/RegisterPage";
 import DashboardPage from "../pages/DashboardPage/DashboardPage";
+import PlaylistDetailPage from "../pages/PlaylistDetailPage/PlaylistDetailPage";
 import ProtectedRoute from "./ProtectedRoute";
 
 
@@ -57,6 +58,14 @@ function AppRouter() {
                         </ProtectedRoute>
                     }
                 
+                />
+
+                <Route path="/playlists/:id"
+                    element= {
+                        <ProtectedRoute>
+                            <PlaylistDetailPage/>
+                        </ProtectedRoute>
+                    }
                 />
 
                 {/* Catch-All */}

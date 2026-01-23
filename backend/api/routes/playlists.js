@@ -60,6 +60,31 @@ router.get('/', async (req, res) => {
 });
 
 /**
+ * @route GET /playlists/:id
+ * @description Get a single playlist owned by the user
+ */
+router.get("/:id", async (req, res) => {
+
+    try {
+        const { id } = req.params;
+
+        const playlist = await Playlist.findOne({
+            _id: id,
+            user_id: req.user._id
+        })
+
+        if(!playlist) {
+            return res.status(404).json({ error: "Playlist not found" });
+        }
+
+        res.json(playlist);
+
+    } catch(error) {
+        res.status(500).json({ error: "Failed to fetch playlist" });
+    }
+})
+
+/**
  * @route   PUT /playlist/:id
  * @description updates playlist by adding a track
  * @header  {string} Authentication - the user's unique _id
