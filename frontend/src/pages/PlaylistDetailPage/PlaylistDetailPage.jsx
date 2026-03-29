@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getPlaylistById } from "../../services/playlistService";
+import "./PlaylistDetailPage.css";
 
 /**
  * Page component that displays the details of a single playlist.
@@ -43,7 +44,7 @@ function PlaylistDetailPage() {
   if (error) return <h2>Error: {error}</h2>;
 
   return (
-    <div style={{ padding: "1rem" }}>
+    <div className="playlist-detail-container">
       <h1>{playlist.title}</h1>
 
       <h3>Tracks</h3>

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import "./CreatePlaylistForm.css";
 
 /**
  * Controlled form for creating a new playlist.
@@ -45,8 +46,8 @@ function CreatePlaylistForm({ onCreate }) {
   };
 
   return (
-    <form onSubmit={handleSubmit} style={{ marginBottom: "1rem" }}>
-      {error && <p style={{ color: "red" }}>{error}</p>}
+    <form onSubmit={handleSubmit} className="create-playlist-form">
+      {error && <p className="create-playlist-form-error">{error}</p>}
 
       <input
         type="text"

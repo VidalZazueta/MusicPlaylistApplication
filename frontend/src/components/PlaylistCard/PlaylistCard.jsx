@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import "./PlaylistCard.css";
 
 /**
  * Renders a single playlist as a list item with a link to its detail page and a delete button.
@@ -15,14 +16,14 @@ import { Link } from "react-router-dom";
  */
 function PlaylistCard ({ playlist, onDelete }) {
     return (
-        <li style={{ display: "flex", justifyContent: "space-between" }}>
+        <li className="playlist-card">
             <Link to={`/playlists/${playlist._id}`}>
                 {playlist.title}
             </Link>
 
             <button 
             onClick={() => onDelete(playlist._id)}
-            style= {{ marginLeft: "1rem"}}>
+            className="playlist-card-delete">
                 Delete
             </button>
         </li>

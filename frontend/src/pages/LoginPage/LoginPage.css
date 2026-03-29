@@ -1,0 +1,7 @@
+.login-container {
+  padding: 1rem;
+}
+
+.login-error {
+  color: red;
+}

@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import AuthForm from "../../components/AuthForm/AuthForm";
+import "./RegisterPage.css";
 
 /**
  * Page component that renders the registration form.
@@ -29,7 +30,7 @@ function RegisterPage() {
   };
 
   return (
-    <div style={{ padding: "1rem" }}>
+    <div className="register-container">
       <AuthForm mode="register" onSubmit={handleRegister}/>
     </div>
   );

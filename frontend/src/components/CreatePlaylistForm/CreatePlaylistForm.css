@@ -1,0 +1,7 @@
+.create-playlist-form {
+  margin-bottom: 1rem;
+}
+
+.create-playlist-form-error {
+  color: red;
+}
