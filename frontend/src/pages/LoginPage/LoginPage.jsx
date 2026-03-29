@@ -50,10 +50,10 @@ function LoginPage() {
 
   return (
     <div className="login-container">
-
-      {error && <p className="login-error">{error}</p>}
-
+      <div className="login-form-wrapper">
         <AuthForm mode="login" onSubmit={handleLogin}/>
+        {error && <p className="login-error">{error}</p>}
+      </div>
     </div>
   );
 }
