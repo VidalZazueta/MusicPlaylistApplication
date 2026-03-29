@@ -19,12 +19,16 @@ const _sanitize = (user) => {
 };
 
 /**
- * @route POST /users/register
- * @description Registers a new user with username, password
- * @param {Object} req.body - the request body
+ * @route   POST /users/register
+ * @description Registers a new user with a username and password.
+ *              The password is hashed before storage; the password field is stripped from the response.
  *
- * @returns {Object} 201 - user object (sanitized)
- * @returns {Object} 400 - eror if username or password missing
+ * @body    {string} username - The desired username (stored in lowercase, must be unique).
+ * @body    {string} password - The plain-text password to hash and store.
+ *
+ * @returns {Object} 201 - The newly created user document (password omitted).
+ * @returns {Object} 400 - Error if `username` or `password` is missing, or if the username already exists.
+ * @returns {Object} 500 - Error if registration fails.
  */
 router.post('/register', async (req, res) => {
     try {
@@ -57,11 +61,16 @@ router.post('/register', async (req, res) => {
 });
 
 /**
- * @route POST /users/login
- * @description Login a user by validating username and password
- * @param {Object} req.body - the request body
+ * @route   POST /users/login
+ * @description Authenticates a user by validating their username and password.
+ *              Returns a signed JWT on success.
  *
- * @returns {Object} 200 - user object (sanitized)
+ * @body    {string} username - The user's username.
+ * @body    {string} password - The user's plain-text password to verify against the stored hash.
+ *
+ * @returns {{access_token: string, token_type: string, user: Object}} 200 - Bearer token and sanitized user object.
+ * @returns {Object} 401 - Error if the username is not found or the password is incorrect.
+ * @returns {Object} 500 - Error if login fails.
  */
 router.post('/login', async (req, res) => {
     try {
@@ -93,12 +102,18 @@ router.post('/login', async (req, res) => {
 });
 
 /**
- * @route GET /users/:id
- * @description Retrieves a private user profile by _id
- * @param {string} id - user _id from the URL
- * @header  {string} Authentication - the user's unique _id
+ * @route   GET /users/:id
+ * @description Retrieves the authenticated user's profile by their MongoDB `_id`.
+ *              Optionally populates the user's playlists when requested.
+ * @access  Protected — requires `Authorization: Bearer <token>` header.
  *
- * @returns {Object} 200 - user object (sanitized)
+ * @param        {string}  id               - The MongoDB `_id` of the user to retrieve (must match the authenticated user).
+ * @queryparam   {boolean} [playlists=false] - When `true`, includes the user's playlist documents in the response.
+ *
+ * @returns {Object} 200 - Sanitized user document (password omitted), with playlists array if requested.
+ * @returns {Object} 403 - Error if the authenticated user is trying to access another user's profile.
+ * @returns {Object} 404 - Error if the user is not found.
+ * @returns {Object} 500 - Error if the query fails.
  */
 router.get('/:id', verifyUser, async (req, res) => {
     try {

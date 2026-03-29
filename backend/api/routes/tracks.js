@@ -6,16 +6,29 @@ const router = express.Router();
 const LASTFM_API_KEY = process.env.LASTFM_API_KEY;
 const LASTFM_BASE_URL = 'https://ws.audioscrobbler.com/2.0/';
 
+/**
+ * Replaces spaces in a string with '+' characters for use in URL query parameters.
+ *
+ * @param {string} str - The input string to format.
+ * @returns {string} The formatted string with spaces replaced by '+'.
+ * @example
+ * _plusjoin('arctic monkeys'); // 'arctic+monkeys'
+ */
 const _plusjoin = (str) => {
     return str.split(' ').join('+');
 };
 /**
- * @route GET /tracks/search
- * @description Search for music tracks using the Last.fm API
- * @queryparam {string} track (required) the name of the track to search for
- * @queryparam {boolean} fuzzy (optional) the Last.fm search is fuzzy by default
+ * @route   GET /tracks/search
+ * @description Searches for music tracks using the Last.fm API and returns a minimal result set.
+ * @access  Protected — requires `Authorization` header with a valid user ID.
  *
- * @returns {Array<Object>} 200 - An array of minimal track objects.
+ * @queryparam {string}  track         - (Required) The name of the track to search for.
+ * @queryparam {boolean} [fuzzy=false] - (Optional) When `true`, appends a wildcard `*` to broaden the search.
+ *
+ * @returns {Array<{artist: string, track: string, mbid: string}>} 200 - Array of minimal track objects.
+ * @returns {Object} 400 - Error if the `track` query parameter is missing.
+ * @returns {Object} 401 - Error if the Authorization header is absent.
+ * @returns {Object} 500 - Error if the Last.fm API request fails.
  */
 router.get('/search', async (req, res) => {
     const { track, fuzzy } = req.query;
@@ -61,11 +74,15 @@ router.get('/search', async (req, res) => {
 });
 
 /**
- * @route GET /tracks/:mbid
- * @description Get detailed information for a single track from the Last.fm API.
- * @param {string} mbid (required) valid mbid or a string formatted as 'artist|track'.
+ * @route   GET /tracks/:mbid
+ * @description Retrieves detailed information for a single track from the Last.fm API.
+ * @access  Protected — requires `Authorization` header with a valid user ID.
  *
- * @returns {Object} 200 - A sanitized object with detailed track information.
+ * @param   {string} mbid - A MusicBrainz ID (mbid) or a fallback string formatted as `'artist|track'`.
+ *
+ * @returns {{mbid: string, name: string, artist: string, album: string, image: string}} 200 - Sanitized track details.
+ * @returns {Object} 401 - Error if the Authorization header is absent.
+ * @returns {Object} 500 - Error if the Last.fm API request fails or the track is not found.
  */
 router.get('/:mbid', async (req, res) => {
     const { mbid } = req.params;

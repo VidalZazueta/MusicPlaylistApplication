@@ -1,9 +1,14 @@
 import mongoose from 'mongoose';
 
 /**
- * user schema
- * represents a user account
+ * @typedef {Object} User
+ * @property {string} username         - The user's unique login name (stored in lowercase).
+ * @property {string} password         - The bcrypt-hashed password (never returned in API responses).
+ * @property {number} [registrationDate] - Unix timestamp (ms) of when the account was created.
+ * @property {Playlist[]} [playlists]  - Virtual field populated on demand; not stored in the document.
  */
+
+/** Mongoose schema representing a registered user account. */
 const UserSchema = new mongoose.Schema({
     username: {
         type: String,
@@ -23,8 +28,8 @@ const UserSchema = new mongoose.Schema({
 });
 
 /**
- * virtual field: playlists
- * populates the playlists that reference this user
+ * Virtual field that populates all Playlist documents where `playlist.user_id` matches this user's `_id`.
+ * Not stored in MongoDB — only included when `.populate('playlists')` is called on a query.
  */
 UserSchema.virtual('playlists', {
     ref: 'Playlist', // referenced model

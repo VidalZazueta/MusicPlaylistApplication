@@ -4,9 +4,11 @@ import bcrypt from 'bcrypt';
 const JWT_SECRET = process.env.JWT_SECRET;
 
 /**
- * Hashes a password using bcrypt in a clear, step by step process
- * @param {string} password - The plain text password
- * @returns {Promise<string>} A promise that resolves to the hashed password 
+ * Hashes a plain-text password using bcrypt with a salt cost factor of 10.
+ *
+ * @async
+ * @param {string} password - The plain-text password to hash.
+ * @returns {Promise<string>} Resolves to the bcrypt hash string (includes the embedded salt).
  */
 
 const hash = async (password) => {
@@ -32,10 +34,13 @@ const hash = async (password) => {
 
 /**
  * Compares a plain-text password against a bcrypt hash.
- * Bcrypt automatically extracts the embedded salt from the hash string for comparison.
- * @param {string} password - The plain-text password to check.
- * @param {string} dbPassword - The hashed password from the database.
- * @returns {Promise<boolean>} A promise that resolves to true if they match, false otherwise.
+ * bcrypt automatically extracts the embedded salt from the stored hash for comparison,
+ * so no separate salt argument is needed.
+ *
+ * @async
+ * @param {string} password   - The plain-text password to check.
+ * @param {string} dbPassword - The bcrypt hash retrieved from the database.
+ * @returns {Promise<boolean>} Resolves to `true` if the password matches the hash, `false` otherwise.
  */
 const compare = async (password, dbPassword) => {
     // Await the result of the async comparison
@@ -43,18 +48,24 @@ const compare = async (password, dbPassword) => {
 };
 
 /**
- * Signs a JWT with a given payload.
- * @param {object} payload - The data to include in the token (e.g., { _id, username }).
- * @returns {string} The signed JSON Web Token.
+ * Signs a JWT with the given payload, using the `JWT_SECRET` environment variable.
+ * The token expires after 24 hours.
+ *
+ * @param {{ _id: string, username: string }} payload - The data to encode in the token.
+ * @returns {string} A signed JSON Web Token valid for 24 hours.
  */
 const signToken = (payload) => {
     return jwt.sign(payload, JWT_SECRET, { expiresIn: '24h' });
 };
 
 /**
- * Verifies a JWT.
- * @param {string} token - The token to verify.
- * @returns {object|null} The decoded payload if valid, otherwise null.
+ * Verifies a JWT against the `JWT_SECRET` environment variable.
+ * Returns `null` instead of throwing when the token is invalid or expired,
+ * so callers can treat falsy as an auth failure without try/catch.
+ *
+ * @param {string} token - The JWT string to verify.
+ * @returns {{ _id: string, username: string, iat: number, exp: number } | null}
+ *   The decoded payload if the token is valid and unexpired, otherwise `null`.
  */
 const verifyToken = (token) => {
     try {

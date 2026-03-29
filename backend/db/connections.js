@@ -11,8 +11,13 @@ const MONGO_URI = `mongodb+srv://${DB_USER}:${DB_PASSWORD}@${DB_URL}/${DB_NAME}?
 
 
 /**
- * Connect to MongoDB
- * Create the mongo URI and connect to the database with mongoose
+ * Establishes a connection to MongoDB using the URI assembled from environment variables.
+ * Logs a success message on connection. Logs the error and exits the process (`process.exit(1)`)
+ * if the connection fails, preventing the app from starting in a broken state.
+ *
+ * @async
+ * @function connect
+ * @returns {Promise<void>} Resolves when the connection is established.
  */
 const connect = async () => {
     try {
@@ -26,8 +31,13 @@ const connect = async () => {
 };
 
 /**
- * Disconnect from MongoDB
- * Disconnect the connection when done
+ * Closes the active Mongoose connection to MongoDB.
+ * Logs a success message on clean disconnect. Logs the error (but does not exit)
+ * if disconnection fails.
+ *
+ * @async
+ * @function disconnect
+ * @returns {Promise<void>} Resolves when the connection is closed.
  */
 const disconnect = async () => {
     try {
