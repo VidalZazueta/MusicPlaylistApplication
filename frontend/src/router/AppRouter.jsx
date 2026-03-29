@@ -36,6 +36,21 @@ import PlaylistDetailPage from "../pages/PlaylistDetailPage/PlaylistDetailPage";
 import ProtectedRoute from "./ProtectedRoute";
 
 
+/**
+ * Defines all client-side routes for the application.
+ *
+ * - `/` redirects to `/dashboard`
+ * - `/login` renders LoginPage (public)
+ * - `/register` renders RegisterPage (public)
+ * - `/dashboard` renders DashboardPage (protected)
+ * - `/playlists/:id` renders PlaylistDetailPage (protected)
+ * - `*` renders a 404 message for unknown paths
+ *
+ * Protected routes are wrapped in {@link ProtectedRoute}, which redirects
+ * unauthenticated users to `/login`.
+ *
+ * @returns {JSX.Element} The fully configured router tree.
+ */
 function AppRouter() {
     return (
         //Routing Context with BrowserRouter

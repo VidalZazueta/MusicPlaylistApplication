@@ -13,17 +13,29 @@ Backend: Data + rules
 // URL parameter to insert in other services
 const API_BASE = 'http://localhost:8888';
 
-// Get the token stored locally
+/**
+ * @returns Return the token stored locally
+ */
 function getToken() {
     return localStorage.getItem("token");
 }
 
+/**
+ * @description Remove the token from local storage, effectively logging the user out
+ */
 function removeToken() {
     localStorage.removeItem("token");
 }
 
 /**
- * Return the playlist data in a JSON format
+ * Fetches all playlists belonging to the authenticated user.
+ *
+ * Reads the JWT from localStorage and sends it as a Bearer token. Throws if
+ * the user is not logged in, the session has expired (401), or the request fails.
+ *
+ * @async
+ * @returns {Promise<Array<Object>>} Resolves to the array of playlist objects returned by the API.
+ * @throws {Error} If not authenticated, session expired, or the fetch fails.
  */
 export async function getPlaylists() {
     const token = getToken();
@@ -53,9 +65,15 @@ export async function getPlaylists() {
 }
 
 /**
- * @description Create a playlist with a specified title
- * @param {String} title - The name of the title for the playlist
- * @returns 
+ * Creates a new playlist with the given title for the authenticated user.
+ *
+ * Sends an authenticated POST request to `/playlists`. Throws if the user
+ * is unauthenticated, the session has expired (401), or the request fails.
+ *
+ * @async
+ * @param {string} title - The title for the new playlist.
+ * @returns {Promise<Object>} Resolves to the newly created playlist object.
+ * @throws {Error} If not authenticated, session expired, or creation fails.
  */
 export async function createPlaylist(title) {
   const token = localStorage.getItem("token");
@@ -87,9 +105,15 @@ export async function createPlaylist(title) {
 }
 
 /**
- * @description - Deletes a playlist
- * @param {*} playlistId - the specific ID of the playlist
- * @returns {Object} json response 
+ * Deletes a playlist by its ID.
+ *
+ * Sends an authenticated DELETE request to `/playlists/:playlistId`. Throws if
+ * the user is unauthenticated, the session has expired (401), or deletion fails.
+ *
+ * @async
+ * @param {string} playlistId - The `_id` of the playlist to delete.
+ * @returns {Promise<Object>} Resolves to the JSON response from the server.
+ * @throws {Error} If not authenticated, session expired, or deletion fails.
  */
 export async function deletePlaylist(playlistId) {
   const token = getToken();
@@ -122,6 +146,17 @@ export async function deletePlaylist(playlistId) {
 
 }
 
+/**
+ * Fetches a single playlist by its ID.
+ *
+ * Sends an authenticated GET request to `/playlists/:id`. Throws if the user
+ * is unauthenticated, the session has expired (401), or the playlist is not found.
+ *
+ * @async
+ * @param {string} id - The `_id` of the playlist to retrieve.
+ * @returns {Promise<Object>} Resolves to the playlist object returned by the API.
+ * @throws {Error} If not authenticated, session expired, or the playlist is not found.
+ */
 export async function getPlaylistById(id) {
   const token = getToken();
 

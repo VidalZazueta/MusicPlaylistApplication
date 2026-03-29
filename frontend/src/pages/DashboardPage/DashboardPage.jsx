@@ -11,6 +11,14 @@ import CreatePlaylistForm from "../../components/CreatePlaylistForm/CreatePlayli
 
 const API_BASE = "http://localhost:8888";
 
+/**
+ * Main dashboard page showing the user's playlists.
+ *
+ * Fetches all playlists on mount and provides controls to create, delete,
+ * and search playlists. Also handles user logout.
+ *
+ * @returns {JSX.Element} The dashboard page UI, or a loading/error state.
+ */
 function DashboardPage() {
   const [playlists, setPlaylists] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -19,7 +27,9 @@ function DashboardPage() {
 
   const navigate = useNavigate();
 
-  // Handle the user logging out
+  /**
+   * Logs the user out by clearing the stored token and redirecting to `/login`.
+   */
   const handleLogout = () => {
     //Calls the imported void function from authService
     logout();
@@ -27,8 +37,12 @@ function DashboardPage() {
   }
 
   /**
-   * @description Handles the creation of a playlist on the frontend, updates UI after doing so
-   * @param {*} title - Title of the playlist
+   * Calls the playlist service to create a new playlist and immediately appends
+   * the returned playlist object to the local state so the UI updates without a refetch.
+   *
+   * @async
+   * @param {string} title - The title for the new playlist.
+   * @returns {Promise<void>}
    */
   const handleCreatePlaylist = async (title) => {
     try {
@@ -46,9 +60,12 @@ function DashboardPage() {
   };
 
   /**
-   * @description - handles deleting the playlist in the frontend
-   * @param {*} playlistId - The ID of the playlist
-   * 
+   * Prompts the user for confirmation, then calls the playlist service to delete
+   * the specified playlist. Removes it from local state on success.
+   *
+   * @async
+   * @param {string} playlistId - The `_id` of the playlist to delete.
+   * @returns {Promise<void>}
    */
   const handleDeletePlaylist = async (playlistId) => {
     //User confirmation to delete
@@ -73,6 +90,13 @@ function DashboardPage() {
   };
 
   useEffect(() => {
+    /**
+     * Fetches all playlists for the authenticated user from the backend
+     * and stores them in state. Runs once on component mount.
+     *
+     * @async
+     * @returns {Promise<void>}
+     */
     const loadPlaylists = async () => {
       try {
         const data = await getPlaylists();
