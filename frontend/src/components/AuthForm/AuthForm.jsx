@@ -1,9 +1,15 @@
 import { useState } from "react";
 
 /**
- * @description Reusable authentication form for login and register
- * @param {string} mode - "login" | "register"
- * @param {Function} onSubmit - callback with form data
+ * Reusable authentication form that supports both login and register modes.
+ *
+ * In `"register"` mode, a Confirm Password field is shown and passwords are
+ * validated to match before the form data is emitted upward.
+ *
+ * @param {Object} props
+ * @param {"login"|"register"} [props.mode="login"] - Controls which fields and labels are displayed.
+ * @param {function({username: string, password: string}): void} props.onSubmit - Callback invoked with the validated form data.
+ * @returns {JSX.Element} The rendered authentication form.
  */
 function AuthForm({ mode = "login", onSubmit }) {
 
@@ -16,7 +22,12 @@ function AuthForm({ mode = "login", onSubmit }) {
     //Determine if we are in login or register UI
     const isRegister = mode === "register";
 
-    //Handle form submission
+    /**
+     * Handles form submission. Validates required fields and, in register mode,
+     * checks that passwords match. Calls `onSubmit` with `{ username, password }`.
+     *
+     * @param {React.FormEvent<HTMLFormElement>} e - The form submit event.
+     */
     const handleSubmit = (e) => {
         //Prevent browers reload
         e.preventDefault();

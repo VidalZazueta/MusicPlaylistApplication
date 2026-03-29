@@ -3,11 +3,31 @@ import { useState } from "react";
 import { login } from "../../services/authService";
 import AuthForm from "../../components/AuthForm/AuthForm";
 
+/**
+ * Page component that renders the login form and handles authentication.
+ *
+ * Displays an error message if login fails, and redirects the user to
+ * the dashboard on successful login.
+ *
+ * @returns {JSX.Element} The login page UI.
+ */
 function LoginPage() {
 
   const navigate = useNavigate();
   const [error, setError] = useState(null);
 
+  /**
+   * Handles login form submission by calling the auth service.
+   *
+   * On success, stores the JWT access token in localStorage and navigates
+   * to the dashboard. On failure, sets the error state with the error message.
+   *
+   * @async
+   * @param {Object} formData - The form data submitted by the user.
+   * @param {string} formData.username - The user's username.
+   * @param {string} formData.password - The user's password.
+   * @returns {Promise<void>}
+   */
   const handleLogin =  async (formData) => {
 
     try {

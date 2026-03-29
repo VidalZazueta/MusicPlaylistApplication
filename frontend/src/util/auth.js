@@ -1,8 +1,13 @@
 import { jwtDecode} from "jwt-decode";
 
 /**
- * @description Returns true if the token is expired or invalid
- * @param {token} - The JWT token
+ * Checks whether a JWT token is expired or structurally invalid.
+ *
+ * Decodes the token and compares its `exp` claim against the current time.
+ * Returns `true` if the token cannot be decoded (malformed/tampered).
+ *
+ * @param {string} token - The JWT string to check.
+ * @returns {boolean} `true` if expired or invalid, `false` if still valid.
  */
 export function isTokenExpired(token) {
     try {

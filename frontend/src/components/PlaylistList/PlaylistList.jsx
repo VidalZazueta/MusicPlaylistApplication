@@ -1,10 +1,15 @@
 import PlaylistCard from "../PlaylistCard/PlaylistCard";
 
 /**
- * @description Display the playlist in a UI card, Handles no business logic as it accepts data via props
- * @param {Object} playlist - Playlist data passed as a prop
- * @param {}
- * @returns Unordered bullet list of a playlist
+ * Renders a list of playlists using {@link PlaylistCard} for each item.
+ *
+ * Contains no business logic — all data and actions are passed in via props.
+ * Renders a fallback message when the list is empty or not provided.
+ *
+ * @param {Object} props
+ * @param {Array<Object>} props.playlists - Array of playlist objects to display.
+ * @param {function(string): void} props.onDelete - Callback forwarded to each PlaylistCard, invoked with the playlist ID.
+ * @returns {JSX.Element} An unordered list of PlaylistCard components, or a "No playlists found" message.
  */
 function PlaylistList({ playlists, onDelete }) {
 

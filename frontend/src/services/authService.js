@@ -4,7 +4,6 @@ const API_BASE = "http://localhost:8888";
  * @description - Login in the user, sends credentials to the backend login endpoint
  * @param {Object} credentials - contains the username and password of the user
  * @returns {Object} server responds with the token and user
- * @param
  */
 export async function login(credentials) {
     console.log("Login payload:", credentials);

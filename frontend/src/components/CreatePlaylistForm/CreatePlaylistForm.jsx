@@ -1,15 +1,29 @@
 import { useState } from "react";
 
 /**
- * @description - Simple controlled form to create a playlist
- * @param {Command} onCreate - Creates a playlist on user input
- * @Note - This component does not call the API, It emits intent upward
+ * Controlled form for creating a new playlist.
+ *
+ * This component does not call the API directly — it validates the title input
+ * and delegates the actual creation to the `onCreate` callback provided by the parent.
+ * Shows a loading state while the parent's async operation is in progress.
+ *
+ * @param {Object} props
+ * @param {function(string): Promise<void>} props.onCreate - Async callback invoked with the playlist title on submit.
+ * @returns {JSX.Element} The create playlist form.
  */
 function CreatePlaylistForm({ onCreate }) {
   const [title, setTitle] = useState("");
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
+  /**
+   * Handles form submission. Validates that the title is not blank, then calls
+   * `onCreate` with the trimmed title. Manages loading state around the async call.
+   *
+   * @async
+   * @param {React.FormEvent<HTMLFormElement>} e - The form submit event.
+   * @returns {Promise<void>}
+   */
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
