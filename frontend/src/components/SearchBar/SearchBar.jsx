@@ -1,3 +1,5 @@
+import "./SearchBar.css";
+
 /**
  * Controlled text input for filtering playlists by name.
  *
@@ -16,11 +18,7 @@ function SearchBar({ value, onChange }) {
       placeholder="Search playlists..."
       value={value}
       onChange={(e) => onChange(e.target.value)}
-      style={{
-        padding: "0.5rem",
-        width: "100%",
-        marginBottom: "1rem"
-      }}
+      className="search-bar"
     />
   );
 }

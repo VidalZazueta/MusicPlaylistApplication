@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { login } from "../../services/authService";
 import AuthForm from "../../components/AuthForm/AuthForm";
+import "./LoginPage.css";
 
 /**
  * Page component that renders the login form and handles authentication.
@@ -48,9 +49,9 @@ function LoginPage() {
   };
 
   return (
-    <div style={{ padding: "1rem" }}>
+    <div className="login-container">
 
-      {error && <p style = {{ color: "red" }}>{error}</p>}
+      {error && <p className="login-error">{error}</p>}
 
         <AuthForm mode="login" onSubmit={handleLogin}/>
     </div>

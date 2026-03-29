@@ -6,6 +6,7 @@ import PlaylistList from "../../components/PlaylistList/PlaylistList";
 import SearchBar from "../../components/SearchBar/SearchBar";
 import { createPlaylist, deletePlaylist } from "../../services/playlistService";
 import CreatePlaylistForm from "../../components/CreatePlaylistForm/CreatePlaylistForm";
+import "./DashboardPage.css";
 
 
 
@@ -125,17 +126,17 @@ function DashboardPage() {
   );
 
   return (
-    <div style={{ padding: "1rem" }}>
-      <header style={{ marginBottom: "1rem"}}>
+    <div className="dashboard-container">
+      <header className="dashboard-header">
         <h1>DashBoard</h1>
 
-          <nav style={{ display: "flex", gap: "1rem "}}>
+          <nav className="dashboard-nav">
             <button onClick={handleLogout}>Logout</button>
           </nav>
       </header>
 
-      
-      {error && (<div style={{ color: "red", marginBottom: "1rem" }}>{error}</div>)}
+
+      {error && (<div className="dashboard-error">{error}</div>)}
 
       <CreatePlaylistForm onCreate={handleCreatePlaylist}/>
 

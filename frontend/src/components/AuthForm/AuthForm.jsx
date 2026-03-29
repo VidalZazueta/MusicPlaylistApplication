@@ -1,4 +1,5 @@
 import { useState } from "react";
+import "./AuthForm.css";
 
 /**
  * Reusable authentication form that supports both login and register modes.
@@ -53,12 +54,12 @@ function AuthForm({ mode = "login", onSubmit }) {
     };
 
     return (
-        <form onSubmit={handleSubmit} style={{ maxWidth: "400px" }}>
+        <form onSubmit={handleSubmit} className="auth-form">
 
         {/* Dynamic title based on mode */}
         <h2>{isRegister ? "Register" : "Login"}</h2>
 
-        {error && <p style={{ color: "red" }}>{error}</p>}
+        {error && <p className="auth-form-error">{error}</p>}
 
         <div>
             <label>Username</label>
