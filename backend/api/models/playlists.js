@@ -1,9 +1,15 @@
 import mongoose from 'mongoose';
 
 /**
- * track subdocument schema
- * represents a single track entry inside a playlist
+ * @typedef {Object} Track
+ * @property {string}  mbid   - The MusicBrainz ID, or a fallback `'artist|trackName'` string when no mbid is available.
+ * @property {string}  name   - The track title.
+ * @property {string}  artist - The artist name.
+ * @property {string}  album  - The album title.
+ * @property {string}  [image] - URL of the album art image (optional).
  */
+
+/** Mongoose subdocument schema representing a single track entry inside a playlist. */
 const TrackSchema = new mongoose.Schema({
     mbid: {
         type: String,
@@ -27,9 +33,13 @@ const TrackSchema = new mongoose.Schema({
 });
 
 /**
- * playlist schema
- * represents a music playlist containing multiple tracks
+ * @typedef {Object} Playlist
+ * @property {mongoose.Types.ObjectId} user_id - Reference to the owning {@link User} document.
+ * @property {string}   title   - The playlist title (required, stored in lowercase).
+ * @property {Track[]}  tracks  - Array of track subdocuments; defaults to an empty array.
  */
+
+/** Mongoose schema representing a music playlist containing multiple tracks. */
 const PlaylistSchema = new mongoose.Schema({
     user_id: {
         type: mongoose.Schema.Types.ObjectId,

@@ -9,12 +9,15 @@ router.use(verifyUser)
 
 
 /**
- * @route   POST /playlist
- * @description Creates a new, empty playlist for the authenticated user
- * @header  {string} Authentication - the user's unique _id
- * @body    {string} title - the title for the new playlist
+ * @route   POST /playlists
+ * @description Creates a new, empty playlist for the authenticated user.
+ * @access  Protected — requires `Authorization: Bearer <token>` header.
  *
- * @returns {Object} 201 - the newly created playlist object
+ * @body    {string} title - The title for the new playlist (required).
+ *
+ * @returns {Object} 201 - The newly created playlist document.
+ * @returns {Object} 400 - Error if `title` is missing from the request body.
+ * @returns {Object} 500 - Error if the playlist could not be created.
  */
 router.post('/', async(req, res) => {
     try {
@@ -38,11 +41,11 @@ router.post('/', async(req, res) => {
 
 /**
  * @route   GET /playlists
- * @description Gets all playlists belonging to the currently authenticated user
- * @header  {string} Authentication - the user's unique _id
+ * @description Retrieves all playlists belonging to the currently authenticated user.
+ * @access  Protected — requires `Authorization: Bearer <token>` header.
  *
- * @returns {Array<Object>} 200 - an array of the user's playlist objects
-
+ * @returns {Array<Object>} 200 - An array of the user's playlist documents (may be empty).
+ * @returns {Object} 500 - Error if the database query fails.
  */
 router.get('/', async (req, res) => {
     try {
@@ -60,8 +63,15 @@ router.get('/', async (req, res) => {
 });
 
 /**
- * @route GET /playlists/:id
- * @description Get a single playlist owned by the user
+ * @route   GET /playlists/:id
+ * @description Retrieves a single playlist by ID, scoped to the authenticated user.
+ * @access  Protected — requires `Authorization: Bearer <token>` header.
+ *
+ * @param   {string} id - The MongoDB `_id` of the playlist to retrieve.
+ *
+ * @returns {Object} 200 - The matching playlist document.
+ * @returns {Object} 404 - Error if no playlist with the given ID exists for this user.
+ * @returns {Object} 500 - Error if the database query fails.
  */
 router.get("/:id", async (req, res) => {
 
@@ -85,13 +95,18 @@ router.get("/:id", async (req, res) => {
 })
 
 /**
- * @route   PUT /playlist/:id
- * @description updates playlist by adding a track
- * @header  {string} Authentication - the user's unique _id
- * @param   {number} id - the _id of the playlist to update
- * @body    {Object} track - the full track object to add to the playlist
+ * @route   PUT /playlists/:id
+ * @description Adds a track to an existing playlist owned by the authenticated user.
+ * @access  Protected — requires `Authorization: Bearer <token>` header.
  *
- * @returns {Object} 200 - the entire playlist object, now updated with the new trackt
+ * @param   {string} id    - The MongoDB `_id` of the playlist to update.
+ * @body    {Object} track - The track object to append (must include `name` and `mbid`).
+ *
+ * @returns {Object} 200 - The updated playlist document including the newly added track.
+ * @returns {Object} 400 - Error if required track fields (`name`, `mbid`) are missing.
+ * @returns {Object} 403 - Error if the playlist does not belong to the authenticated user.
+ * @returns {Object} 404 - Error if no playlist with the given ID is found.
+ * @returns {Object} 500 - Error if the update fails.
  */
 router.put('/:id', async (req, res) => {
     try {
@@ -128,12 +143,16 @@ router.put('/:id', async (req, res) => {
 });
 
 /**
- * @route   DELETE /playlist/:id
- * @description Deletes a specific playlist owned by the user
- * @header  {string} Authentication - the user's unique _id
- * @param   {number} id - the _id of the playlist to delete
+ * @route   DELETE /playlists/:id
+ * @description Deletes a specific playlist owned by the authenticated user.
+ * @access  Protected — requires `Authorization: Bearer <token>` header.
  *
- * @returns {Object} 200 - a confirmation object { success: true, _id: 101 }.
+ * @param   {string} id - The MongoDB `_id` of the playlist to delete.
+ *
+ * @returns {{message: string, playlist: Object}} 200 - Confirmation message and the deleted playlist document.
+ * @returns {Object} 403 - Error if the playlist does not belong to the authenticated user.
+ * @returns {Object} 404 - Error if no playlist with the given ID is found.
+ * @returns {Object} 500 - Error if the deletion fails.
  */
 router.delete('/:id', async (req, res) => {
     try {
