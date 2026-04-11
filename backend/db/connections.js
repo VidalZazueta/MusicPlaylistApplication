@@ -6,8 +6,10 @@ const DB_PASSWORD = process.env.DB_PASSWORD;
 const DB_URL = process.env.DB_URL;
 const DB_NAME = process.env.DB_NAME;
 
-
-const MONGO_URI = `mongodb+srv://${DB_USER}:${DB_PASSWORD}@${DB_URL}/${DB_NAME}?retryWrites=true&w=majority&appName=Cluster0`;
+// MONGO_URI can be set directly (e.g. in CI with a local MongoDB container).
+// Falls back to the Atlas connection string built from individual env vars.
+const MONGO_URI = process.env.MONGO_URI ||
+    `mongodb+srv://${DB_USER}:${DB_PASSWORD}@${DB_URL}/${DB_NAME}?retryWrites=true&w=majority&appName=Cluster0`;
 
 
 /**
