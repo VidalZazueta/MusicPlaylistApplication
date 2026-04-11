@@ -1,0 +1,26 @@
+{
+  "id": "ci-environment",
+  "name": "CI Environment",
+  "values": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8888",
+      "enabled": true
+    },
+    {
+      "key": "token",
+      "value": "",
+      "enabled": true
+    },
+    {
+      "key": "user_id",
+      "value": "",
+      "enabled": true
+    },
+    {
+      "key": "playlist_id",
+      "value": "",
+      "enabled": true
+    }
+  ]
+}
