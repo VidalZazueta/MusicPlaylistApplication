@@ -104,14 +104,17 @@ jobs:
 
       - name: Start backend server
         working-directory: backend
-        run: node app.js &
+        run: node app.js > /tmp/server.log 2>&1 &
         env:
-          # Point to the MongoDB service container (plain URI, not Atlas)
           MONGO_URI: mongodb://localhost:27017/musicplaylist_test
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
 
       - name: Wait for server to be ready
         run: npx wait-on http://localhost:8888 --timeout 30000
+
+      - name: Show server logs (on failure)
+        if: failure()
+        run: cat /tmp/server.log
 
       - name: Run Postman collection
         run: |
