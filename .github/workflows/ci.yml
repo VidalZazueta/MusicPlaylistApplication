@@ -110,7 +110,7 @@ jobs:
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
 
       - name: Wait for server to be ready
-        run: npx wait-on http://localhost:8888 --timeout 30000
+        run: npx wait-on tcp:localhost:8888 --timeout 30000
 
       - name: Show server logs (on failure)
         if: failure()
