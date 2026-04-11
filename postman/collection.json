@@ -1,0 +1,513 @@
+{
+  "info": {
+    "_postman_id": "65bb690d-e2c2-46a1-bc4f-f9701109bcd5",
+    "name": "Music PlayList App",
+    "description": "Postman tests to test API routes in the Music Playlist Application",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "48893361"
+  },
+  "item": [
+    {
+      "name": "Register User - POST /users/register",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Register - Status 201 or 400 (duplicate)\", function () {\r",
+              "    pm.expect([201, 400]).to.include(pm.response.code);\r",
+              "});\r",
+              "\r",
+              "let res;\r",
+              "try {\r",
+              "    res = pm.response.json();\r",
+              "} catch (e) {\r",
+              "    console.log(\"No JSON body for register:\", e);\r",
+              "    return;\r",
+              "}\r",
+              "\r",
+              "if (pm.response.code === 201 && res._id) {\r",
+              "    pm.environment.set(\"user_id\", res._id);\r",
+              "\r",
+              "    pm.test(\"Register - Response has username & _id\", function () {\r",
+              "        pm.expect(res).to.have.property(\"username\");\r",
+              "        pm.expect(res).to.have.property(\"_id\");\r",
+              "        pm.expect(res).to.not.have.property(\"password\");\r",
+              "    });\r",
+              "} else {\r",
+              "    console.log(\"Register returned non-201:\", res);\r",
+              "}\r",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"username\": \"testuser\",\r\n    \"password\": \"mypassword\"\r\n}\r\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/users/register",
+          "host": ["{{base_url}}"],
+          "path": ["users", "register"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Login - POST /users/login",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Login - Status 200 or 401\", function () {\r",
+              "    pm.expect([200, 401]).to.include(pm.response.code);\r",
+              "});\r",
+              "\r",
+              "let res;\r",
+              "try {\r",
+              "    res = pm.response.json();\r",
+              "} catch (e) {\r",
+              "    console.log(\"No JSON body for login:\", e);\r",
+              "    return;\r",
+              "}\r",
+              "\r",
+              "if (pm.response.code === 200 && res.user && res.access_token) {\r",
+              "    pm.environment.set(\"token\", res.access_token);\r",
+              "    pm.environment.set(\"user_id\", res.user._id);\r",
+              "\r",
+              "    pm.test(\"Login - Valid Token Response\", function () {\r",
+              "        pm.expect(res).to.have.property(\"token_type\");\r",
+              "        pm.expect(res).to.have.property(\"access_token\");\r",
+              "        pm.expect(res.user).to.have.property(\"username\");\r",
+              "        pm.expect(res.user).to.not.have.property(\"password\");\r",
+              "    });\r",
+              "} else {\r",
+              "    console.log(\"Login failed, not setting token:\", res);\r",
+              "}\r",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"username\": \"testuser\",\r\n    \"password\": \"mypassword\"\r\n}\r\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/users/login",
+          "host": ["{{base_url}}"],
+          "path": ["users", "login"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get User by ID No Playlist - GET /users/:id",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Get User - Status 200 or 403\", function () {\r",
+              "    pm.expect([200, 403]).to.include(pm.response.code);\r",
+              "});\r",
+              "\r",
+              "if (pm.response.code !== 200) {\r",
+              "    console.log(\"User GET failed:\", pm.response.json());\r",
+              "    return;\r",
+              "}\r",
+              "\r",
+              "const res = pm.response.json();\r",
+              "\r",
+              "pm.test(\"Get User - Basic structure correct\", function () {\r",
+              "    pm.expect(res).to.have.property(\"_id\");\r",
+              "    pm.expect(res).to.have.property(\"username\");\r",
+              "    pm.expect(res).to.not.have.property(\"password\");\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Get User - Does NOT include playlists by default\", function () {\r",
+              "    pm.expect(res).to.not.have.property(\"playlists\");\r",
+              "});\r",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+        ],
+        "url": {
+          "raw": "{{base_url}}/users/{{user_id}}",
+          "host": ["{{base_url}}"],
+          "path": ["users", "{{user_id}}"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get User by ID with Playlist - GET /users/:id?playlists=true",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Get User w/ Playlists - Status 200 or 403\", function () {\r",
+              "    pm.expect([200, 403]).to.include(pm.response.code);\r",
+              "});\r",
+              "\r",
+              "if (pm.response.code !== 200) {\r",
+              "    console.log(\"User GET failed:\", pm.response.json());\r",
+              "    return;\r",
+              "}\r",
+              "\r",
+              "const res = pm.response.json();\r",
+              "\r",
+              "pm.test(\"Get User - Structure correct\", function () {\r",
+              "    pm.expect(res).to.have.property(\"_id\");\r",
+              "    pm.expect(res).to.have.property(\"username\");\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Get User - Includes playlists array\", function () {\r",
+              "    pm.expect(res).to.have.property(\"playlists\");\r",
+              "    pm.expect(res.playlists).to.be.an(\"array\");\r",
+              "});\r",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+        ],
+        "url": {
+          "raw": "{{base_url}}/users/{{user_id}}?playlists=true",
+          "host": ["{{base_url}}"],
+          "path": ["users", "{{user_id}}"],
+          "query": [{ "key": "playlists", "value": "true" }]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Create Playlist - POST /playlists",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Create Playlist - Status 201 or 400\", function () {\r",
+              "    pm.expect([201, 400]).to.include(pm.response.code);\r",
+              "});\r",
+              "\r",
+              "let res;\r",
+              "try {\r",
+              "    res = pm.response.json();\r",
+              "} catch (e) {\r",
+              "    console.log(\"Create Playlist: No JSON body:\", e);\r",
+              "    return;\r",
+              "}\r",
+              "\r",
+              "if (pm.response.code === 201 && res._id) {\r",
+              "    pm.environment.set(\"playlist_id\", res._id);\r",
+              "\r",
+              "    pm.test(\"Create Playlist - Structure\", function () {\r",
+              "        pm.expect(res).to.have.property(\"_id\");\r",
+              "        pm.expect(res).to.have.property(\"title\");\r",
+              "        pm.expect(res).to.have.property(\"user_id\");\r",
+              "    });\r",
+              "} else {\r",
+              "    console.log(\"Create Playlist returned non-201:\", res);\r",
+              "}\r",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" },
+          { "key": "Content-Type", "value": "application/json", "type": "text" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"title\": \"My New Playlist\"\r\n}",
+          "options": { "raw": { "language": "json" } }
+        },
+        "url": {
+          "raw": "{{base_url}}/playlists",
+          "host": ["{{base_url}}"],
+          "path": ["playlists"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get All Playlists for User - GET /playlists",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Get Playlists - Status 200\", function () {\r",
+              "    pm.expect(pm.response.code).to.equal(200);\r",
+              "});\r",
+              "\r",
+              "let res = pm.response.json();\r",
+              "\r",
+              "pm.test(\"Get Playlists returns an array\", function () {\r",
+              "    pm.expect(res).to.be.an(\"array\");\r",
+              "});\r",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+        ],
+        "url": {
+          "raw": "{{base_url}}/playlists",
+          "host": ["{{base_url}}"],
+          "path": ["playlists"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Search for Track - GET /tracks/search",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Search Track - Status 200\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+        ],
+        "url": {
+          "raw": "{{base_url}}/tracks/search?track=bohemian%20rhapsody&fuzzy=true",
+          "host": ["{{base_url}}"],
+          "path": ["tracks", "search"],
+          "query": [
+            { "key": "track", "value": "bohemian%20rhapsody" },
+            { "key": "fuzzy", "value": "true" }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Detailed Track Info - GET /tracks/:mbid",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Track Info - Status 200\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+        ],
+        "url": {
+          "raw": "{{base_url}}/tracks/Coldplay|Yellow",
+          "host": ["{{base_url}}"],
+          "path": ["tracks", "Coldplay|Yellow"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Add Track to Playlist - PUT /playlists/:id",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Add Track - Status 200 or 400 or 403\", function () {\r",
+              "    pm.expect([200, 400, 403]).to.include(pm.response.code);\r",
+              "});\r",
+              "\r",
+              "let res;\r",
+              "try {\r",
+              "    res = pm.response.json();\r",
+              "} catch (e) {\r",
+              "    console.log(\"Add Track: No JSON body:\", e);\r",
+              "    return;\r",
+              "}\r",
+              "\r",
+              "if (pm.response.code === 200 && res.tracks) {\r",
+              "    pm.test(\"Add Track - Playlist updated\", function () {\r",
+              "        pm.expect(res).to.have.property(\"_id\");\r",
+              "        pm.expect(res).to.have.property(\"tracks\");\r",
+              "        pm.expect(res.tracks).to.be.an(\"array\");\r",
+              "    });\r",
+              "} else {\r",
+              "    console.log(\"Add Track failed:\", res);\r",
+              "}\r",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "PUT",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"name\": \"Imagine\",\r\n    \"artist\": \"John Lennon\",\r\n    \"album\": \"Imagine\",\r\n    \"mbid\": \"johnlennon|imagine\",\r\n    \"image\": \"https://example.com/imagine.png\"\r\n}",
+          "options": { "raw": { "language": "json" } }
+        },
+        "url": {
+          "raw": "{{base_url}}/playlists/{{playlist_id}}",
+          "host": ["{{base_url}}"],
+          "path": ["playlists", "{{playlist_id}}"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get All Playlists for User After Add - GET /playlists",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Get Playlists - Status 200\", function () {\r",
+              "    pm.expect(pm.response.code).to.equal(200);\r",
+              "});\r",
+              "\r",
+              "let res = pm.response.json();\r",
+              "\r",
+              "pm.test(\"Get Playlists returns an array\", function () {\r",
+              "    pm.expect(res).to.be.an(\"array\");\r",
+              "});\r",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+        ],
+        "url": {
+          "raw": "{{base_url}}/playlists",
+          "host": ["{{base_url}}"],
+          "path": ["playlists"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Delete Playlist - DELETE /playlists/:id",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Delete Playlist - Status 200 or 404\", function () {\r",
+              "    pm.expect([200, 404]).to.include(pm.response.code);\r",
+              "});\r",
+              "\r",
+              "let res = {};\r",
+              "try {\r",
+              "    res = pm.response.json();\r",
+              "} catch (e) {\r",
+              "    console.warn(\"Delete returned non-JSON\", e);\r",
+              "    return;\r",
+              "}\r",
+              "\r",
+              "if (pm.response.code === 200) {\r",
+              "    pm.test(\"Delete Playlist - Structure OK\", function () {\r",
+              "        pm.expect(res).to.have.property(\"message\");\r",
+              "        pm.expect(res).to.have.property(\"playlist\");\r",
+              "        pm.expect(res.playlist).to.have.property(\"_id\");\r",
+              "    });\r",
+              "}\r",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "DELETE",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+        ],
+        "url": {
+          "raw": "{{base_url}}/playlists/{{playlist_id}}",
+          "host": ["{{base_url}}"],
+          "path": ["playlists", "{{playlist_id}}"]
+        }
+      },
+      "response": []
+    }
+  ]
+}
