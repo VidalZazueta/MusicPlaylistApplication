@@ -108,6 +108,7 @@ jobs:
         env:
           MONGO_URI: mongodb://localhost:27017/musicplaylist_test
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          LASTFM_API_KEY: ${{ secrets.LASTFM_API_KEY }}
 
       - name: Wait for server to be ready
         run: npx wait-on tcp:localhost:8888 --timeout 30000
