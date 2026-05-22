@@ -184,3 +184,39 @@ export async function getPlaylistById(id) {
 
   return response.json();
 }
+
+/**
+ * Adds a track to an existing playlist.
+ *
+ * @async
+ * @param {string} playlistId - The `_id` of the playlist to update.
+ * @param {Object} track - The track object (must include `name`, `mbid`, `artist`, `album`).
+ * @returns {Promise<Object>} Resolves to the updated playlist document.
+ * @throws {Error} If not authenticated, session expired, or the update fails.
+ */
+export async function addTrackToPlaylist(playlistId, track) {
+  const token = getToken();
+
+  if (!token) throw new Error("Not authenticated");
+
+  const response = await fetch(`${API_BASE}/playlists/${playlistId}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`
+    },
+    body: JSON.stringify(track)
+  });
+
+  if (response.status === 401) {
+    removeToken();
+    throw new Error("Session expired. Please log in again.");
+  }
+
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.error || "Failed to add track");
+  }
+
+  return response.json();
+}
