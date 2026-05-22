@@ -1,16 +1,9 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getPlaylistById } from "../../services/playlistService";
+import { getPlaylistById, addTrackToPlaylist } from "../../services/playlistService";
+import { searchTracks, getTrackByMbid } from "../../services/trackService";
 import "./PlaylistDetailPage.css";
 
-/**
- * Page component that displays the details of a single playlist.
- *
- * Reads the playlist `id` from the URL params, fetches the playlist on mount,
- * and renders its title and track list. Shows loading and error states as needed.
- *
- * @returns {JSX.Element} The playlist detail view, or a loading/error state.
- */
 function PlaylistDetailPage() {
   const { id } = useParams();
 
@@ -18,14 +11,13 @@ function PlaylistDetailPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
+  const [searchLoading, setSearchLoading] = useState(false);
+  const [searchError, setSearchError] = useState(null);
+  const [addingMbid, setAddingMbid] = useState(null);
+
   useEffect(() => {
-    /**
-     * Fetches the playlist by ID from the backend and stores it in state.
-     * Re-runs whenever the `id` URL param changes.
-     *
-     * @async
-     * @returns {Promise<void>}
-     */
     const loadPlaylist = async () => {
       try {
         const data = await getPlaylistById(id);
@@ -40,6 +32,38 @@ function PlaylistDetailPage() {
     loadPlaylist();
   }, [id]);
 
+  const handleSearch = async (e) => {
+    e.preventDefault();
+    if (!searchQuery.trim()) return;
+
+    setSearchLoading(true);
+    setSearchError(null);
+    setSearchResults([]);
+
+    try {
+      const results = await searchTracks(searchQuery);
+      setSearchResults(results);
+    } catch (err) {
+      setSearchError(err.message);
+    } finally {
+      setSearchLoading(false);
+    }
+  };
+
+  const handleAddTrack = async (result) => {
+    setAddingMbid(result.mbid);
+
+    try {
+      const fullTrack = await getTrackByMbid(result.mbid);
+      const updatedPlaylist = await addTrackToPlaylist(id, fullTrack);
+      setPlaylist(updatedPlaylist);
+    } catch (err) {
+      setSearchError(err.message);
+    } finally {
+      setAddingMbid(null);
+    }
+  };
+
   if (loading) return <h2>Loading playlist...</h2>;
   if (error) return <h2>Error: {error}</h2>;
 
@@ -53,7 +77,38 @@ function PlaylistDetailPage() {
       ) : (
         <ul>
           {playlist.tracks.map((track, index) => (
-            <li key={index}>{track.name}</li>
+            <li key={index}>{track.name} — {track.artist}</li>
+          ))}
+        </ul>
+      )}
+
+      <h3>Add a Track</h3>
+      <form onSubmit={handleSearch}>
+        <input
+          type="text"
+          placeholder="Search for a track..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
+        <button type="submit" disabled={searchLoading}>
+          {searchLoading ? "Searching..." : "Search"}
+        </button>
+      </form>
+
+      {searchError && <p>{searchError}</p>}
+
+      {searchResults.length > 0 && (
+        <ul>
+          {searchResults.map((result) => (
+            <li key={result.mbid}>
+              {result.track} — {result.artist}
+              <button
+                onClick={() => handleAddTrack(result)}
+                disabled={addingMbid === result.mbid}
+              >
+                {addingMbid === result.mbid ? "Adding..." : "Add"}
+              </button>
+            </li>
           ))}
         </ul>
       )}

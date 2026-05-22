@@ -1,4 +1,5 @@
 import PlaylistCard from "../PlaylistCard/PlaylistCard";
+import "./PlaylistList.css";
 
 /**
  * Renders a list of playlists using {@link PlaylistCard} for each item.
@@ -18,7 +19,7 @@ function PlaylistList({ playlists, onDelete }) {
     }
 
     return (
-        <ul>
+        <ul className = "playlist-list">
             {playlists.map((playlist) => (
                 <PlaylistCard
                     key={playlist._id}

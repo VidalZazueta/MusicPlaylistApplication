@@ -1,9 +1,39 @@
 .playlist-card {
   display: flex;
+  flex-direction: column;
+  background-color: yellow;
+  padding: 10px;
+}
+
+.playlist-card-header {
+  display: flex;
   justify-content: space-between;
-  height: 100px; 
+  align-items: center;
+  margin-bottom: 8px;
 }
 
 .playlist-card-delete {
   margin-left: 1rem;
+}
+
+.playlist-card-tracks {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.track-card {
+  display: flex;
+  justify-content: space-between;
+  background-color: white;
+  padding: 6px 10px;
+  border-radius: 4px;
+}
+
+.track-artist {
+  color: gray;
+  font-size: 0.9rem;
 }
