@@ -3,6 +3,7 @@
   flex-direction: column;
   background-color: rgb(46, 46, 44);
   padding: 10px;
+  border-radius: 15px;
 }
 
 .playlist-card-header {
