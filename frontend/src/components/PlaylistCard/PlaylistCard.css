@@ -1,7 +1,7 @@
 .playlist-card {
   display: flex;
   flex-direction: column;
-  background-color: yellow;
+  background-color: rgb(46, 46, 44);
   padding: 10px;
 }
 
@@ -10,6 +10,11 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 8px;
+  color: white;
+}
+
+.playlist-card-header a {
+  color: white;
 }
 
 .playlist-card-delete {
@@ -34,6 +39,6 @@
 }
 
 .track-artist {
-  color: gray;
+  color: black;
   font-size: 0.9rem;
 }
