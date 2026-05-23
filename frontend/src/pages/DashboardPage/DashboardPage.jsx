@@ -139,12 +139,25 @@ function DashboardPage() {
 
       {error && (<div className="dashboard-error">{error}</div>)}
 
-      <CreatePlaylistForm onCreate={handleCreatePlaylist}/>
+      <div className="dashboard-body">
+        <div className="dashboard-left">
+          <CreatePlaylistForm onCreate={handleCreatePlaylist}/>
+          <SearchBar value={searchTerm} onChange={setSearchTerm} />
+          <PlaylistList playlists={filteredPlaylists} onDelete={handleDeletePlaylist}/>
+        </div>
 
-      <SearchBar value={searchTerm} onChange={setSearchTerm} />
+        <div className="dashboard-right">
+          {/* Right panel component goes here */}
+        </div>
+      </div>
 
-      <PlaylistList playlists={filteredPlaylists} onDelete={handleDeletePlaylist}/>
+      <div>
+        
+      </div>
+
     </div>
+
+    
   );
 }
 

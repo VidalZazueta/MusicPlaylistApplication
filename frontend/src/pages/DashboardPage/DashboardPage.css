@@ -19,3 +19,18 @@
   color: red;
   margin-bottom: 1rem;
 }
+
+.dashboard-body {
+  display: flex;
+  gap: 1rem;
+}
+
+.dashboard-left {
+  flex: 2;
+  min-width: 0;
+}
+
+.dashboard-right {
+  flex: 1;
+  min-width: 0;
+}
