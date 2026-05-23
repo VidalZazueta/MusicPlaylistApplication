@@ -31,6 +31,15 @@ function PlaylistCard ({ playlist, onDelete }) {
                 </button>
             </div>
 
+            
+            <div className="playlist-metrics">
+                <span>#</span>
+                <span>Title</span>
+                <span>Album</span>
+                <span>Date Added</span>
+                <span>Length</span>
+            </div>
+
             {playlist.tracks && playlist.tracks.length > 0 && (
                 <ul className="playlist-card-tracks">
                     {playlist.tracks.map((track, index) => (
