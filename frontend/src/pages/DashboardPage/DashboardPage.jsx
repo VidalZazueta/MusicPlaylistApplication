@@ -6,6 +6,7 @@ import PlaylistList from "../../components/PlaylistList/PlaylistList";
 import SearchBar from "../../components/SearchBar/SearchBar";
 import { createPlaylist, deletePlaylist } from "../../services/playlistService";
 import CreatePlaylistForm from "../../components/CreatePlaylistForm/CreatePlaylistForm";
+import ProfileIcon from "../../components/ProfileIcon/ProfileIcon.jsx";
 import "./DashboardPage.css";
 
 
@@ -131,7 +132,7 @@ function DashboardPage() {
         <h1>DashBoard</h1>
 
           <nav className="dashboard-nav">
-            <button onClick={handleLogout}>Logout</button>
+            <ProfileIcon onLogout={handleLogout} />
           </nav>
       </header>
 

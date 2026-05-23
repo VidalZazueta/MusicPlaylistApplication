@@ -3,8 +3,11 @@
 }
 
 .dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 1rem;
-  color:  white;
+  color: white;
 }
 
 .dashboard-nav {
