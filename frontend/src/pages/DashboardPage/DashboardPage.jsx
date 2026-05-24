@@ -7,6 +7,8 @@ import SearchBar from "../../components/SearchBar/SearchBar";
 import { createPlaylist, deletePlaylist } from "../../services/playlistService";
 import CreatePlaylistForm from "../../components/CreatePlaylistForm/CreatePlaylistForm";
 import ProfileIcon from "../../components/ProfileIcon/ProfileIcon.jsx";
+import TopTracksAndArtists from "../../components/TopTracksAndArtists/TopTracksAndArtists.jsx";
+import SimilarTracksAndArtists from "../../components/SimilarTracksAndArtists/SimilarTracksAndArtists.jsx";
 import "./DashboardPage.css";
 
 
@@ -128,6 +130,7 @@ function DashboardPage() {
 
   return (
     <div className="dashboard-container">
+      {/* Header */}
       <header className="dashboard-header">
         <h1>DashBoard</h1>
 
@@ -136,22 +139,25 @@ function DashboardPage() {
           </nav>
       </header>
 
+      {/* Below the Header */}
+      <CreatePlaylistForm onCreate={handleCreatePlaylist}/>
+      <SearchBar value={searchTerm} onChange={setSearchTerm} />
 
       {error && (<div className="dashboard-error">{error}</div>)}
 
+      {/* Left side of the Dashboard */}
       <div className="dashboard-body">
         <div className="dashboard-left">
-          <CreatePlaylistForm onCreate={handleCreatePlaylist}/>
-          <SearchBar value={searchTerm} onChange={setSearchTerm} />
           <PlaylistList playlists={filteredPlaylists} onDelete={handleDeletePlaylist}/>
         </div>
 
+        {/* Right Side of the Dashboard */}
         <div className="dashboard-right">
-          {/* Right panel component goes here */}
-        </div>
-      </div>
+          <TopTracksAndArtists></TopTracksAndArtists>
 
-      <div>
+          <SimilarTracksAndArtists></SimilarTracksAndArtists>
+          
+        </div>
         
       </div>
 
