@@ -4,6 +4,7 @@ import 'dotenv/config';
 import playlists from './api/routes/playlists.js';
 import tracks from './api/routes/tracks.js';
 import users from './api/routes/users.js';
+import lastfm from './api/routes/lastfm.js';
 import {connect, disconnect} from './db/connections.js'
 import cors from 'cors';
 
@@ -27,6 +28,7 @@ app.use(express.json());
 app.use('/playlists', playlists);
 app.use('/tracks', tracks);
 app.use('/users', users);
+app.use('/lastfm', lastfm);
 
 
 const start = async () => {
