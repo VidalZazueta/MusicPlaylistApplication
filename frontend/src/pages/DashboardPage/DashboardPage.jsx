@@ -155,7 +155,7 @@ function DashboardPage() {
         <div className="dashboard-right">
           <TopTracksAndArtists></TopTracksAndArtists>
 
-          <SimilarTracksAndArtists></SimilarTracksAndArtists>
+          <SimilarTracksAndArtists playlists={playlists} />
           
         </div>
         
