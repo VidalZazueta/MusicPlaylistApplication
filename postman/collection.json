@@ -464,6 +464,95 @@
       "response": []
     },
     {
+      "name": "Get Top 10 Tracks - GET /lastfm/top-tracks",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Top Tracks - Status 200\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "\r",
+              "const res = pm.response.json();\r",
+              "\r",
+              "pm.test(\"Top Tracks - Returns an array of 10\", function () {\r",
+              "    pm.expect(res).to.be.an(\"array\");\r",
+              "    pm.expect(res.length).to.equal(10);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Top Tracks - Each item has required fields\", function () {\r",
+              "    res.forEach(function (track) {\r",
+              "        pm.expect(track).to.have.property(\"rank\");\r",
+              "        pm.expect(track).to.have.property(\"name\");\r",
+              "        pm.expect(track).to.have.property(\"duration\");\r",
+              "        pm.expect(track).to.have.property(\"playcount\");\r",
+              "        pm.expect(track).to.have.property(\"listeners\");\r",
+              "    });\r",
+              "});\r",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/lastfm/top-tracks",
+          "host": ["{{base_url}}"],
+          "path": ["lastfm", "top-tracks"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Top 10 Artists - GET /lastfm/top-artists",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Top Artists - Status 200\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "\r",
+              "const res = pm.response.json();\r",
+              "\r",
+              "pm.test(\"Top Artists - Returns an array of 10\", function () {\r",
+              "    pm.expect(res).to.be.an(\"array\");\r",
+              "    pm.expect(res.length).to.equal(10);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Top Artists - Each item has required fields\", function () {\r",
+              "    res.forEach(function (artist) {\r",
+              "        pm.expect(artist).to.have.property(\"rank\");\r",
+              "        pm.expect(artist).to.have.property(\"name\");\r",
+              "        pm.expect(artist).to.have.property(\"playcount\");\r",
+              "        pm.expect(artist).to.have.property(\"listeners\");\r",
+              "    });\r",
+              "});\r",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/lastfm/top-artists",
+          "host": ["{{base_url}}"],
+          "path": ["lastfm", "top-artists"]
+        }
+      },
+      "response": []
+    },
+    {
       "name": "Delete Playlist - DELETE /playlists/:id",
       "event": [
         {
