@@ -40,8 +40,10 @@ router.get("/top-tracks" , async(req, res) => {
             format: 'json'
         }
 
+        // Create the API call and get the response data
         const { data } = await axios.get(LASTFM_BASE_URL, { params })
 
+        // From the data extract the rank, name, duration, playcount, and listeners
         const tracks = data.tracks.track.map((track,index) => ({
             rank: index + 1,
             name: track.name,
@@ -75,8 +77,10 @@ router.get("/top-artists" , async (req, res) => {
             format: 'json'
         }
 
+        // Create the API call and get the response data
         const { data } = await axios.get(LASTFM_BASE_URL, { params });
 
+        // From the data only get the neccessary data such as rank, name, playcount, listeners
         const artists = data.artists.artist.map((artist, index) => ({
             rank: index + 1,
             name: artist.name,
@@ -84,6 +88,7 @@ router.get("/top-artists" , async (req, res) => {
             listeners: artist.listeners
         }));
 
+        // Return to json format
         res.json(artists);
     } catch (error){
         res.status(500).json({error : "Failed to get the top artists"})
@@ -91,5 +96,90 @@ router.get("/top-artists" , async (req, res) => {
 
 
 })
+
+/**
+ * @route   GET /lastfm/similar-artists
+ * @description Returns up to 10 artists similar to the given artist using the Last.fm API.
+ *
+ * @queryparam {string} artist - (Required) The artist name to find similar artists for.
+ *
+ * @returns {Array<{name: string, match: string}>} 200 - List of similar artists with match score.
+ * @returns {Object} 400 - Error if the `artist` query parameter is missing.
+ * @returns {Object} 500 - Error if the Last.fm API request fails.
+ */
+router.get("/similar-artists", async (req, res) => {
+    const { artist } = req.query;
+
+    if (!artist) {
+        return res.status(400).json({ error: 'artist query parameter is required' });
+    }
+
+    try {
+        const params = {
+            method: 'artist.getSimilar',
+            artist,
+            limit: 10,
+            api_key: LASTFM_API_KEY,
+            format: 'json'
+        };
+
+        const { data } = await axios.get(LASTFM_BASE_URL, { params });
+
+        const artists = (data.similarartists?.artist || []).map((artist,index) => ({
+            rank: index + 1,
+            name: artist.name,
+            match: artist.match
+        }));
+
+        res.json(artists);
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to get similar artists' });
+    }
+});
+
+/**
+ * @route   GET /lastfm/similar-tracks
+ * @description Returns up to 10 tracks similar to the given track using the Last.fm API.
+ *
+ * @queryparam {string} track  - (Required) The track name to find similar tracks for.
+ * @queryparam {string} artist - (Required) The artist name of the track.
+ *
+ * @returns {Array<{name: string, artist: string, match: string}>} 200 - List of similar tracks with match score.
+ * @returns {Object} 400 - Error if `track` or `artist` query parameters are missing.
+ * @returns {Object} 500 - Error if the Last.fm API request fails.
+ */
+router.get("/similar-tracks", async (req, res) => {
+    const { track, artist } = req.query;
+
+    if (!track || !artist) {
+        return res.status(400).json({ error: 'track and artist query parameters are required' });
+    }
+
+    try {
+        const params = {
+            method: 'track.getSimilar',
+            track,
+            artist,
+            limit: 10,
+            api_key: LASTFM_API_KEY,
+            format: 'json'
+        };
+
+        const { data } = await axios.get(LASTFM_BASE_URL, { params });
+
+        const tracks = (data.similartracks?.track || []).map((track,index) => ({
+            rank: index + 1,
+            name: track.name,
+            artist: track.artist.name,
+            match: track.match
+        }));
+
+        res.json(tracks);
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to get similar tracks' });
+    }
+});
+
+
 
 export default router;
