@@ -28,3 +28,24 @@ export async function getSimilarTracks(track, artist) {
     if (!response.ok) throw new Error("Failed to get similar tracks");
     return response.json();
 }
+
+/**
+ * 
+ */
+export async function getTopArtists() {
+    const response = await fetch(`${API_BASE}/lastfm/top-artists`);
+
+    if(!response.ok) throw new Error("Failed to get top artists");
+    return response.json();
+
+}
+
+/**
+ * 
+ */
+export async function getTopTracks() {
+    const response = await fetch(`${API_BASE}/lastfm/top-tracks`);
+
+    if(!response.ok) throw new Error("Failed to get top tracks");
+    return response.json();
+}
