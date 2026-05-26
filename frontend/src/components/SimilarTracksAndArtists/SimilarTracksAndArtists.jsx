@@ -127,7 +127,7 @@ function SimilarTracksAndArtists({ playlists = [] }) {
                 </p>
             ) : (
                 <>
-                    <div className="tab-metrics-header">
+                    <div className={`tab-metrics-header ${activeTab === TABS.ARTISTS ? "tab-metrics-header--artist" : ""}`}>
                         <span>#</span>
                         <span>{activeTab === TABS.TRACKS ? "Title" : "Artist"}</span>
                         {activeTab === TABS.TRACKS ? (
@@ -136,7 +136,7 @@ function SimilarTracksAndArtists({ playlists = [] }) {
                                 <span>Duration</span>
                             </>
                         ) : (
-                            <span>Match</span>
+                            <span>Artist Page</span>
                         )}
                     </div>
                     <ul className="tab-list">
@@ -155,7 +155,14 @@ function SimilarTracksAndArtists({ playlists = [] }) {
                                 ) : (
                                     <>
                                         <span>{item.name}</span>
-                                        <span>{Number(item.match * 100).toFixed(0)}%</span>
+                                        <a
+                                            className="tab-artist-url"
+                                            href={item.url}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                        >
+                                            {item.url}
+                                        </a>
                                     </>
                                 )}
                             </li>

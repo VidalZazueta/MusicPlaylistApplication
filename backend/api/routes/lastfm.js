@@ -127,10 +127,10 @@ router.get("/similar-artists", async (req, res) => {
 
         const { data } = await axios.get(LASTFM_BASE_URL, { params });
 
-        const artists = (data.similarartists?.artist || []).map((artist,index) => ({
+        const artists = (data.similarartists?.artist || []).map((artist, index) => ({
             rank: index + 1,
             name: artist.name,
-            match: artist.match
+            url: artist.url
         }));
 
         res.json(artists);

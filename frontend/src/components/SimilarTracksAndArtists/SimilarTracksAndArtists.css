@@ -48,8 +48,25 @@
   grid-template-columns: 2rem 1fr 8rem 4rem;
 }
 
+.tab-metrics-header--artist,
 .tab-list-item--artist {
-  grid-template-columns: 2rem 1fr auto;
+  grid-template-columns: 2rem 1fr minmax(0, 180px);
+}
+
+.tab-artist-url {
+  color: gray;
+  font-size: 0.8rem;
+  text-decoration: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+  text-align: right;
+}
+
+.tab-artist-url:hover {
+  color: white;
+  text-decoration: underline;
 }
 
 .tab-metrics-header {
