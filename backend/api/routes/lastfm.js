@@ -49,6 +49,7 @@ router.get("/top-tracks" , async(req, res) => {
             rank: index + 1,
             name: track.name,
             artist: track.artist.name,
+            duration: secondsToMinutesFormatted(track.duration),
             playcount: track.playcount,
             listeners: track.listeners
 
