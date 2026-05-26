@@ -119,26 +119,49 @@ function SimilarTracksAndArtists({ playlists = [] }) {
             {/* Show error, empty state, or the list of recommendations */}
             {error ? (
                 <p className="tab-empty">{error}</p>
+            ) : items.length === 0 ? (
+                <p className="tab-empty">
+                    {playlists.flatMap((p) => p.tracks).length === 0
+                        ? "Add tracks to your playlists to get recommendations."
+                        : `No ${activeTab.toLowerCase()} to show.`}
+                </p>
             ) : (
-                <ul className="tab-list">
-                    {items.length === 0 ? (
-                        <p className="tab-empty">
-                            {/* Differentiate between no tracks at all vs no results returned */}
-                            {playlists.flatMap((p) => p.tracks).length === 0
-                                ? "Add tracks to your playlists to get recommendations."
-                                : `No ${activeTab.toLowerCase()} to show.`}
-                        </p>
-                    ) : (
-                        items.map((item) => (
-                            <li key={item.rank} className="tab-list-item">
-                                <span className="tab-list-rank">{item.rank}.</span>
-                                {activeTab === TABS.TRACKS
-                                    ? `${item.name} — ${item.artist}`
-                                    : item.name}
+                <>
+                    <div className="tab-metrics-header">
+                        <span>#</span>
+                        <span>{activeTab === TABS.TRACKS ? "Title" : "Artist"}</span>
+                        {activeTab === TABS.TRACKS ? (
+                            <>
+                                <span>Playcount</span>
+                                <span>Duration</span>
+                            </>
+                        ) : (
+                            <span>Match</span>
+                        )}
+                    </div>
+                    <ul className="tab-list">
+                        {items.map((item) => (
+                            <li key={item.rank} className={`tab-list-item ${activeTab === TABS.TRACKS ? "tab-list-item--track" : "tab-list-item--artist"}`}>
+                                <span className="tab-list-rank">{item.rank}</span>
+                                {activeTab === TABS.TRACKS ? (
+                                    <>
+                                        <div className="tab-track-info">
+                                            <span className="tab-track-name">{item.name}</span>
+                                            <span className="tab-track-artist">{item.artist}</span>
+                                        </div>
+                                        <span>{Number(item.playcount).toLocaleString()}</span>
+                                        <span>{item.duration}</span>
+                                    </>
+                                ) : (
+                                    <>
+                                        <span>{item.name}</span>
+                                        <span>{Number(item.match * 100).toFixed(0)}%</span>
+                                    </>
+                                )}
                             </li>
-                        ))
-                    )}
-                </ul>
+                        ))}
+                    </ul>
+                </>
             )}
         </div>
     );

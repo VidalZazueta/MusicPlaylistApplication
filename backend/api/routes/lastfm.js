@@ -173,6 +173,8 @@ router.get("/similar-tracks", async (req, res) => {
             rank: index + 1,
             name: track.name,
             artist: track.artist.name,
+            playcount: track.playcount,
+            duration: track.duration ? secondsToMinutesFormatted(track.duration) : '--',
             match: track.match
         }));
 

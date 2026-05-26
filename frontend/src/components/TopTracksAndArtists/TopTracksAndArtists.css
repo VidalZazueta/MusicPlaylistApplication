@@ -37,7 +37,7 @@
 .tab-metrics-header,
 .tab-list-item {
   display: grid;
-  grid-template-columns: 2rem 1fr auto auto;
+  grid-template-columns: 2rem 1fr 8rem 4rem;
   align-items: center;
   gap: 1rem;
   padding: 0.4rem 0.5rem;
