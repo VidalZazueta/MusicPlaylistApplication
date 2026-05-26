@@ -8,6 +8,7 @@ const LASTFM_API_KEY = process.env.LASTFM_API_KEY;
 const LASTFM_BASE_URL = 'https://ws.audioscrobbler.com/2.0/';
 
 
+//TODO Reuse to adjust in the models of the tracks
 /**
  * Converts a duration in seconds to a human-readable `M:SS` string.
  *
@@ -48,7 +49,6 @@ router.get("/top-tracks" , async(req, res) => {
             rank: index + 1,
             name: track.name,
             artist: track.artist.name,
-            duration: secondsToMinutesFormatted(track.duration),
             playcount: track.playcount,
             listeners: track.listeners
 

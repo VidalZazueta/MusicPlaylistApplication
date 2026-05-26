@@ -70,17 +70,31 @@ function TopTracksAndArtists() {
             {error ? (
                 <p className="tab-empty">{error}</p>
             ) : (
-                <ul className="tab-list">
-                    {items.map((item) => (
-                        <li key={item.rank} className="tab-list-item">
-                            <span className="tab-list-rank">{item.rank}.</span>
-                            {/* Tracks include the artist name; artists only have a name */}
-                            {activeTab === TABS.TRACKS
-                                ? `${item.name} — ${item.artist || ""}`
-                                : item.name}
-                        </li>
-                    ))}
-                </ul>
+                <>
+                    <div className="tab-metrics-header">
+                        <span>#</span>
+                        <span>{activeTab === TABS.TRACKS ? "Title" : "Artist"}</span>
+                        <span>Playcount</span>
+                        <span>Listeners</span>
+                    </div>
+                    <ul className="tab-list">
+                        {items.map((item) => (
+                            <li key={item.rank} className="tab-list-item">
+                                <span className="tab-list-rank">{item.rank}</span>
+                                {activeTab === TABS.TRACKS ? (
+                                    <div className="tab-track-info">
+                                        <span className="tab-track-name">{item.name}</span>
+                                        <span className="tab-track-artist">{item.artist}</span>
+                                    </div>
+                                ) : (
+                                    <span>{item.name}</span>
+                                )}
+                                <span>{Number(item.playcount).toLocaleString()}</span>
+                                <span>{Number(item.listeners).toLocaleString()}</span>
+                            </li>
+                        ))}
+                    </ul>
+                </>
             )}
         </div>
     );

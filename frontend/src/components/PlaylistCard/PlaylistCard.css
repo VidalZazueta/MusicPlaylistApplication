@@ -31,15 +31,34 @@
   gap: 6px;
 }
 
+.playlist-metrics,
 .track-card {
-  display: flex;
-  justify-content: space-between;
-  background-color: white;
+  display: grid;
+  grid-template-columns: 2rem 2fr 2fr;
+  align-items: center;
   padding: 6px 10px;
+}
+
+.track-card {
+  background-color: white;
   border-radius: 4px;
 }
 
-.track-artist {
+.track-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.track-name {
+  font-size: 0.95rem;
   color: black;
-  font-size: 0.9rem;
+}
+
+.track-artist {
+  font-size: 0.8rem;
+  color: #666;
+}
+
+.playlist-metrics {
+  color: aliceblue;
 }

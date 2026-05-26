@@ -36,16 +36,18 @@ function PlaylistCard ({ playlist, onDelete }) {
                 <span>#</span>
                 <span>Title</span>
                 <span>Album</span>
-                <span>Date Added</span>
-                <span>Length</span>
             </div>
 
             {playlist.tracks && playlist.tracks.length > 0 && (
                 <ul className="playlist-card-tracks">
                     {playlist.tracks.map((track, index) => (
                         <li key={index} className="track-card">
-                            <span className="track-name">{track.name}</span>
-                            <span className="track-artist">{track.artist}</span>
+                            <span>{index + 1}</span>
+                            <div className="track-info">
+                                <span className="track-name">{track.name}</span>
+                                <span className="track-artist">{track.artist}</span>
+                            </div>
+                            <span>{track.album}</span>
                         </li>
                     ))}
                 </ul>
