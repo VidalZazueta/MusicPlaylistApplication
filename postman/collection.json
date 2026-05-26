@@ -570,11 +570,11 @@
               "    pm.expect(res.length).to.be.at.most(10);\r",
               "});\r",
               "\r",
-              "pm.test(\"Similar Artists - Each item has rank, name, and match\", function () {\r",
+              "pm.test(\"Similar Artists - Each item has rank, name, and url\", function () {\r",
               "    res.forEach(function (artist) {\r",
               "        pm.expect(artist).to.have.property(\"rank\");\r",
               "        pm.expect(artist).to.have.property(\"name\");\r",
-              "        pm.expect(artist).to.have.property(\"match\");\r",
+              "        pm.expect(artist).to.have.property(\"url\");\r",
               "    });\r",
               "});\r",
               ""
