@@ -1,5 +1,6 @@
 import express from 'express';
 import axios from 'axios';
+import { millisecondsToMinutesFormatted } from '../util/utilities.js';
 
 const router = express.Router()
 
@@ -7,20 +8,6 @@ const router = express.Router()
 const LASTFM_API_KEY = process.env.LASTFM_API_KEY;
 const LASTFM_BASE_URL = 'https://ws.audioscrobbler.com/2.0/';
 
-
-/**
- * Converts a duration in seconds to a human-readable `M:SS` string.
- *
- * @param {number} duration - Track duration in seconds.
- * @returns {string} Formatted time string (e.g. `3:07`).
- */
-function secondsToMinutesFormatted(duration) {
-    const minutes = Math.floor(duration / 60);
-    const seconds = String(duration % 60).padStart(2, '0');
-
-    const formattedTime = `${minutes}:${seconds}`;
-    return formattedTime;
-}
 
 /**
  * @route   GET /lastfm/top-tracks

@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 
+
 /**
  * @typedef {Object} Track
  * @property {string}  mbid   - The MusicBrainz ID, or a fallback `'artist|trackName'` string when no mbid is available.
@@ -29,6 +30,12 @@ const TrackSchema = new mongoose.Schema({
     },
     image: {
         type: String
+    },
+    duration: {
+        type: String
+    }, 
+    date_added: {
+        type: Date, default: Date.now
     }
 });
 

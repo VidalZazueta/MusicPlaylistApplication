@@ -1,5 +1,6 @@
 import axios from 'axios';
 import express from 'express';
+import { secondsToMinutesFormatted, millisecondsToMinutesFormatted } from '../util/utilities.js';
 
 const router = express.Router();
 
@@ -118,7 +119,8 @@ router.get('/:mbid', async (req, res) => {
             name: data.track.name,
             artist: data.track.artist.name,
             album: data.track.album?.title,
-            image: image['#text']
+            image: image['#text'],
+            duration: data.track.duration ? millisecondsToMinutesFormatted(data.track.duration) : '--'
         };
 
         res.json(minimal);
