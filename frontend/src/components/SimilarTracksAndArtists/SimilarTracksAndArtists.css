@@ -70,8 +70,9 @@
 }
 
 .tab-metrics-header {
-  color: rgb(255, 255, 255);
+  color: #ffffff;
   font-size: 0.8rem;
+  font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   margin-bottom: 0.25rem;
