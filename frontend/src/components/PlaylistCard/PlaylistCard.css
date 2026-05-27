@@ -34,7 +34,7 @@
 
 .playlist-metrics {
   display: grid;
-  grid-template-columns: 2rem 2fr 2fr;
+  grid-template-columns: 2rem 2fr 2fr 1fr;
   align-items: center;
   padding: 6px 10px;
   border-bottom: 1px solid rgb(240, 248, 255);
@@ -43,7 +43,7 @@
 
 .track-card {
   display: grid;
-  grid-template-columns: 2rem 2fr 2fr;
+  grid-template-columns: 2rem 2fr 2fr 1fr;
   align-items: center;
   padding: 6px 10px;
   border-radius: 4px;
