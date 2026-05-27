@@ -36,6 +36,7 @@ function PlaylistCard ({ playlist, onDelete }) {
                 <span>#</span>
                 <span>Title</span>
                 <span>Album</span>
+                <span>Date Added</span>
             </div>
 
             {playlist.tracks && playlist.tracks.length > 0 && (
@@ -48,6 +49,7 @@ function PlaylistCard ({ playlist, onDelete }) {
                                 <span className="track-artist">{track.artist}</span>
                             </div>
                             <span>{track.album}</span>
+                            <span>{track.dateAdded ? new Date(track.dateAdded).toLocaleDateString() : '—'}</span>
                         </li>
                     ))}
                 </ul>
