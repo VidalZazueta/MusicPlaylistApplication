@@ -7,6 +7,7 @@ import mongoose from 'mongoose';
  * @property {string}  artist - The artist name.
  * @property {string}  album  - The album title.
  * @property {string}  [image] - URL of the album art image (optional).
+ * @property {Date} dateAdded - Timestep of when the track was added, auto added by mongoose
  */
 
 /** Mongoose subdocument schema representing a single track entry inside a playlist. */
@@ -29,6 +30,10 @@ const TrackSchema = new mongoose.Schema({
     },
     image: {
         type: String
+    },
+    dateAdded: {
+        type: Date,
+        default: Date.now
     }
 });
 

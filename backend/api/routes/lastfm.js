@@ -27,7 +27,7 @@ function secondsToMinutesFormatted(duration) {
  * @route   GET /lastfm/top-tracks
  * @description Returns the top 10 globally charting tracks from the Last.fm API.
  *
- * @returns {Array<{rank: number, name: string, duration: string, playcount: string, listeners: string}>} 200 - Ranked list of top tracks.
+ * @returns {Array<{rank: number, name: string, artist: string, playcount: string, listeners: string}>} 200 - Ranked list of top tracks.
  * @returns {Object} 500 - Error if the Last.fm API request fails.
  */
 router.get("/top-tracks" , async(req, res) => {
@@ -49,7 +49,6 @@ router.get("/top-tracks" , async(req, res) => {
             rank: index + 1,
             name: track.name,
             artist: track.artist.name,
-            duration: secondsToMinutesFormatted(track.duration),
             playcount: track.playcount,
             listeners: track.listeners
 
