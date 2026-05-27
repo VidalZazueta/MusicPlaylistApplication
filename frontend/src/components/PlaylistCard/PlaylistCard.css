@@ -40,8 +40,14 @@
 }
 
 .track-card {
-  background-color: white;
   border-radius: 4px;
+  color: white;
+  cursor: default;
+  transition: background-color 0.15s ease;
+}
+
+.track-card:hover {
+  background-color: rgba(255, 255, 255, 0.1);
 }
 
 .track-info {
@@ -51,12 +57,12 @@
 
 .track-name {
   font-size: 0.95rem;
-  color: black;
+  color: white;
 }
 
 .track-artist {
   font-size: 0.8rem;
-  color: #666;
+  color: #aaa;
 }
 
 .playlist-metrics {
