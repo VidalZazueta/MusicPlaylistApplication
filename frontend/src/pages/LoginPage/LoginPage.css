@@ -22,3 +22,12 @@
   margin: 0;
   padding: 0 1.5rem;
 }
+
+.register-box {
+  text-align: center;
+}
+
+.register-text {
+  color: white;
+  text-decoration: underline;
+}
