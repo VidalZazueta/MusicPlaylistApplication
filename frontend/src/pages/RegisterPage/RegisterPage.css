@@ -1,3 +1,16 @@
 .register-container {
   padding: 1rem;
+  background-size: cover;
+  background-position: center;
+  min-height: 100vh;
+  background-image: url('../../assets/resgister-page-background.jpg');
+}
+
+.login-text-container {
+  text-align: center;
+  width: 300px;
+  padding: 0 10.5rem;
+}
+.login-text{
+  color: white;
 }

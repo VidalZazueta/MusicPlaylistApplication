@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useState } from "react";
 import { login } from "../../services/authService";
 import AuthForm from "../../components/AuthForm/AuthForm";
@@ -53,6 +53,11 @@ function LoginPage() {
       <div className="login-form-wrapper">
         <AuthForm mode="login" onSubmit={handleLogin}/>
         {error && <p className="login-error">{error}</p>}
+        <div className="register-box">
+          <Link  to="/register" className="register-text">
+            Don't have an account? Register here
+          </Link>
+        </div>
       </div>
     </div>
   );
