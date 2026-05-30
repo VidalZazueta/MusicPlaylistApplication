@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import AuthForm from "../../components/AuthForm/AuthForm";
 import "./RegisterPage.css";
 
@@ -32,6 +32,11 @@ function RegisterPage() {
   return (
     <div className="register-container">
       <AuthForm mode="register" onSubmit={handleRegister}/>
+      <div className="login-text-container">
+        <Link to="/login" className="login-text">
+          Already have an account? Login in here!
+        </Link>
+      </div>
     </div>
   );
 }
